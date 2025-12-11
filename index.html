@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PandaBeo - Sale Off Thời Trang Chất Lượng</title>
+    <title>PandaBeo - Thời Trang Chính Hãng</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -303,6 +303,16 @@
             color: var(--dark-color);
         }
 
+        .brand-tag {
+            display: inline-block;
+            background: #f1f2f6;
+            color: #666;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
         .product-price {
             display: flex;
             align-items: center;
@@ -343,42 +353,112 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        /* Category Section */
-        .categories-section {
-            margin-bottom: 4rem;
+        /* Authentication Forms */
+        .auth-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .category-card {
+        .auth-container {
             background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-            text-align: center;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
         }
 
-        .category-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .category-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-        }
-
-        .category-title {
+        .close-auth {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
             font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
             color: var(--dark-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         /* Contact Section */
@@ -561,6 +641,63 @@
     </style>
 </head>
 <body>
+    <!-- Authentication Forms -->
+    <section class="auth-section" id="authSection">
+        <div class="auth-container">
+            <button class="close-auth" onclick="closeAuth()">&times;</button>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('register')">Đăng Ký</button>
+                <button class="auth-tab" onclick="switchAuthTab('login')">Đăng Nhập</button>
+            </div>
+            
+            <!-- Registration Form -->
+            <form class="auth-form active" id="registerForm">
+                <div class="form-group">
+                    <label for="regFullName">Họ và Tên *</label>
+                    <input type="text" id="regFullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPhone">Số điện thoại *</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regAddress">Địa chỉ gửi hàng *</label>
+                    <input type="text" id="regAddress" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Email *</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Mật khẩu *</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                
+                <button type="submit" class="auth-btn">Đăng Ký Tài Khoản</button>
+            </form>
+            
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="loginIdentifier">Họ tên hoặc Số điện thoại *</label>
+                    <input type="text" id="loginIdentifier" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu *</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                
+                <button type="submit" class="auth-btn">Đăng Nhập</button>
+            </form>
+        </div>
+    </section>
+
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -573,16 +710,16 @@
                 <nav>
                     <ul class="nav-menu">
                         <li><a href="#home" class="active">Trang Chủ</a></li>
-                        <li><a href="#sale">Sale</a></li>
-                        <li><a href="#nam">Nam</a></li>
-                        <li><a href="#nu">Nữ</a></li>
-                        <li><a href="#tre-em">Trẻ Em</a></li>
-                        <li><a href="#phu-kien">Phụ Kiện</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterProducts('all')">Tất Cả</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterProducts('nam')">Nam</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterProducts('nu')">Nữ</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterProducts('tre-em')">Trẻ Em</a></li>
+                        <li><a href="javascript:void(0)" onclick="filterProducts('phu-kien')">Phụ Kiện</a></li>
                     </ul>
                 </nav>
                 
                 <div class="header-actions">
-                    <div class="user-icon">
+                    <div class="user-icon" onclick="openAuth('login')">
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="cart-icon">
@@ -597,37 +734,10 @@
     <!-- Hero Banner -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>SALE KHỦNG CUỐI NĂM 2024</h1>
+            <h1>SALE KHỦNG CUỐI NĂM 2025</h1>
             <p>Giảm giá lên đến 70% - Thời trang chất lượng cao với giá tốt nhất thị trường</p>
             <div class="sale-badge">SALE UP TO 70% OFF</div>
             <a href="#products" class="btn-primary">MUA NGAY <i class="fas fa-arrow-right"></i></a>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories-section container">
-        <h2 class="section-title">BÁN CHẠY NHẤT</h2>
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="category-icon">👔</div>
-                <h3 class="category-title">Thời Trang Nam</h3>
-                <p>Áo sơ mi, quần âu, đồ thể thao</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👗</div>
-                <h3 class="category-title">Thời Trang Nữ</h3>
-                <p>Đầm váy, áo kiểu, đồ công sở</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">👕</div>
-                <h3 class="category-title">Trẻ Em</h3>
-                <p>Đồ bé trai, bé gái, sơ sinh</p>
-            </div>
-            <div class="category-card">
-                <div class="category-icon">🧦</div>
-                <h3 class="category-title">Phụ Kiện</h3>
-                <p>Tất, mũ, khăn, giày dép</p>
-            </div>
         </div>
     </section>
 
@@ -646,103 +756,145 @@
     <!-- Products Grid -->
     <section class="products-container container" id="products">
         <div class="products-grid" id="productsGrid">
-            <!-- Product 1 -->
+            <!-- Product 1 - Gucci -->
             <div class="product-card" data-category="nam">
                 <div class="product-image">
                     <div class="discount-badge">-50%</div>
-                    <img src="https://via.placeholder.com/400x500/FF6B6B/FFFFFF?text=Áo+Sơ+Mi+Nam" alt="Áo Sơ Mi Nam Cao Cấp">
+                    <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Sơ Mi Gucci">
                 </div>
                 <div class="product-info">
                     <div class="product-category">Thời Trang Nam</div>
-                    <h3 class="product-name">Áo Sơ Mi Nam Cao Cấp</h3>
+                    <span class="brand-tag">Gucci</span>
+                    <h3 class="product-name">Áo Sơ Mi Gucci Cao Cấp</h3>
                     <div class="product-price">
-                        <span class="current-price">299.000đ</span>
-                        <span class="original-price">599.000đ</span>
+                        <span class="current-price">8.999.000đ</span>
+                        <span class="original-price">17.999.000đ</span>
                     </div>
                     <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
                 </div>
             </div>
 
-            <!-- Product 2 -->
+            <!-- Product 2 - Gucci -->
             <div class="product-card" data-category="nu">
                 <div class="product-image">
                     <div class="discount-badge">-60%</div>
-                    <img src="https://via.placeholder.com/400x500/3742FA/FFFFFF?text=Váy+Dự+Tiệc" alt="Đầm Váy Nữ Dự Tiệc">
+                    <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đầm Váy Gucci">
                 </div>
                 <div class="product-info">
                     <div class="product-category">Thời Trang Nữ</div>
-                    <h3 class="product-name">Đầm Váy Nữ Dự Tiệc</h3>
+                    <span class="brand-tag">Gucci</span>
+                    <h3 class="product-name">Đầm Dạ Hội Gucci Sang Trọng</h3>
                     <div class="product-price">
-                        <span class="current-price">399.000đ</span>
+                        <span class="current-price">12.999.000đ</span>
+                        <span class="original-price">32.999.000đ</span>
+                    </div>
+                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
+                </div>
+            </div>
+
+            <!-- Product 3 - Adidas -->
+            <div class="product-card" data-category="nam">
+                <div class="product-image">
+                    <div class="discount-badge">-45%</div>
+                    <img src="https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Thun Adidas">
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Thời Trang Nam</div>
+                    <span class="brand-tag">Adidas</span>
+                    <h3 class="product-name">Áo Thun Thể Thao Adidas</h3>
+                    <div class="product-price">
+                        <span class="current-price">549.000đ</span>
                         <span class="original-price">999.000đ</span>
                     </div>
                     <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
                 </div>
             </div>
 
-            <!-- Product 3 -->
-            <div class="product-card" data-category="nam">
-                <div class="product-image">
-                    <div class="discount-badge">-45%</div>
-                    <img src="https://via.placeholder.com/400x500/2ED573/FFFFFF?text=Quần+Jean+Nam" alt="Quần Jean Nam Slim Fit">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Thời Trang Nam</div>
-                    <h3 class="product-name">Quần Jean Nam Slim Fit</h3>
-                    <div class="product-price">
-                        <span class="current-price">349.000đ</span>
-                        <span class="original-price">649.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
+            <!-- Product 4 - H&M -->
             <div class="product-card" data-category="nu">
                 <div class="product-image">
                     <div class="discount-badge">-55%</div>
-                    <img src="https://via.placeholder.com/400x500/FFA502/FFFFFF?text=Áo+Kiểu+Công+Sở" alt="Áo Kiểu Nữ Công Sở">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Kiểu H&M">
                 </div>
                 <div class="product-info">
                     <div class="product-category">Thời Trang Nữ</div>
-                    <h3 class="product-name">Áo Kiểu Nữ Công Sở</h3>
+                    <span class="brand-tag">H&M</span>
+                    <h3 class="product-name">Áo Kiểu Công Sở H&M</h3>
                     <div class="product-price">
-                        <span class="current-price">279.000đ</span>
-                        <span class="original-price">629.000đ</span>
+                        <span class="current-price">379.000đ</span>
+                        <span class="original-price">849.000đ</span>
                     </div>
                     <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
                 </div>
             </div>
 
-            <!-- Product 5 -->
+            <!-- Product 5 - Adidas Kids -->
             <div class="product-card" data-category="tre-em">
                 <div class="product-image">
                     <div class="discount-badge">-70%</div>
-                    <img src="https://via.placeholder.com/400x500/FF9FF3/FFFFFF?text=Đồ+Trẻ+Em" alt="Bộ Đồ Trẻ Em Hoạ Tiết">
+                    <img src="https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đồ Trẻ Em Adidas">
                 </div>
                 <div class="product-info">
                     <div class="product-category">Trẻ Em</div>
-                    <h3 class="product-name">Bộ Đồ Trẻ Em Hoạ Tiết</h3>
+                    <span class="brand-tag">Adidas</span>
+                    <h3 class="product-name">Bộ Đồ Trẻ Em Adidas</h3>
                     <div class="product-price">
-                        <span class="current-price">199.000đ</span>
-                        <span class="original-price">669.000đ</span>
+                        <span class="current-price">299.000đ</span>
+                        <span class="original-price">999.000đ</span>
                     </div>
                     <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
                 </div>
             </div>
 
-            <!-- Product 6 -->
-            <div class="product-card" data-category="nam">
+            <!-- Product 6 - Phụ Kiện -->
+            <div class="product-card" data-category="phu-kien">
                 <div class="product-image">
                     <div class="discount-badge">-40%</div>
-                    <img src="https://via.placeholder.com/400x500/54A0FF/FFFFFF?text=Áo+Khoác+Thể+Thao" alt="Áo Khoác Nam Thể Thao">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Túi Xách Gucci">
                 </div>
                 <div class="product-info">
-                    <div class="product-category">Thời Trang Nam</div>
-                    <h3 class="product-name">Áo Khoác Nam Thể Thao</h3>
+                    <div class="product-category">Phụ Kiện</div>
+                    <span class="brand-tag">Gucci</span>
+                    <h3 class="product-name">Túi Xách Gucci Chính Hãng</h3>
                     <div class="product-price">
-                        <span class="current-price">449.000đ</span>
-                        <span class="original-price">749.000đ</span>
+                        <span class="current-price">15.999.000đ</span>
+                        <span class="original-price">26.999.000đ</span>
+                    </div>
+                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
+                </div>
+            </div>
+
+            <!-- Product 7 - Phụ Kiện -->
+            <div class="product-card" data-category="phu-kien">
+                <div class="product-image">
+                    <div class="discount-badge">-35%</div>
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Giày Adidas">
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Phụ Kiện</div>
+                    <span class="brand-tag">Adidas</span>
+                    <h3 class="product-name">Giày Thể Thao Adidas</h3>
+                    <div class="product-price">
+                        <span class="current-price">1.299.000đ</span>
+                        <span class="original-price">1.999.000đ</span>
+                    </div>
+                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
+                </div>
+            </div>
+
+            <!-- Product 8 - Phụ Kiện -->
+            <div class="product-card" data-category="phu-kien">
+                <div class="product-image">
+                    <div class="discount-badge">-50%</div>
+                    <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đồng Hồ H&M">
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Phụ Kiện</div>
+                    <span class="brand-tag">H&M</span>
+                    <h3 class="product-name">Đồng Hồ Thời Trang H&M</h3>
+                    <div class="product-price">
+                        <span class="current-price">499.000đ</span>
+                        <span class="original-price">999.000đ</span>
                     </div>
                     <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
                 </div>
@@ -782,7 +934,7 @@
                     <a href="https://tiktok.com/@mamhuydeptrai?lang=vi-VN" target="_blank" title="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
-                    <a href="https://youtube.com/channel/PandaBeo" target="_blank" title="YouTube">
+                    <a href="https://www.youtube.com/@PandaBeo2006" target="_blank" title="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
@@ -821,12 +973,12 @@
                         <li><a href="https://www.facebook.com/huy.mam.395/" target="_blank">Facebook</a></li>
                         <li><a href="https://www.instagram.com/huy.mam.395/" target="_blank">Instagram</a></li>
                         <li><a href="https://tiktok.com/@mamhuydeptrai?lang=vi-VN" target="_blank">TikTok</a></li>
-                        <li><a href="https://youtube.com/channel/PandaBeo" target="_blank">YouTube</a></li>
+                        <li><a href="https://www.youtube.com/@PandaBeo2006" target="_blank">YouTube</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 PandaBeo. All rights reserved. Made with <i class="fas fa-heart" style="color:#ff4757;"></i></p>
+                <p>&copy; 2025 PandaBeo. All rights reserved. Made with <i class="fas fa-heart" style="color:#ff4757;"></i></p>
             </div>
         </div>
     </footer>
@@ -836,10 +988,24 @@
         function filterProducts(category) {
             const products = document.querySelectorAll('.product-card');
             const buttons = document.querySelectorAll('.filter-btn');
+            const navLinks = document.querySelectorAll('.nav-menu a');
             
+            // Update active state of filter buttons
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
+            // Update active state of navigation links
+            navLinks.forEach(link => {
+                if (link.getAttribute('onclick') === `filterProducts('${category}')`) {
+                    link.classList.add('active');
+                } else if (link.getAttribute('href') === '#home') {
+                    // Keep home active if not filtering
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Filter products
             products.forEach(product => {
                 if (category === 'all') {
                     product.style.display = 'block';
@@ -870,22 +1036,68 @@
             });
         });
 
+        // Authentication functions
+        function openAuth(formType) {
+            document.getElementById('authSection').style.display = 'flex';
+            switchAuthTab(formType);
+        }
+
+        function closeAuth() {
+            document.getElementById('authSection').style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            // Activate selected tab
+            if (tab === 'register') {
+                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            } else {
+                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            }
+        }
+
+        // Form submission handlers
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Đăng ký thành công! Chào mừng bạn đến với PandaBeo.');
+            closeAuth();
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Đăng nhập thành công!');
+            closeAuth();
+        });
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (href === '#') return;
                 
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+                if (href.startsWith('#') && href !== '#home') {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             });
+        });
+
+        // Close auth when clicking outside
+        document.getElementById('authSection').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAuth();
+            }
         });
     </script>
 </body>
