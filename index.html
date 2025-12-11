@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PandaBeo - Thời Trang Chính Hãng</title>
+    <title>PandaBeo - Thời Trang Cao Cấp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ====== BIẾN & RESET ====== */
         :root {
-            --primary-color: #ff4757;
-            --secondary-color: #3742fa;
-            --dark-color: #2f3542;
-            --light-color: #f1f2f6;
-            --gradient: linear-gradient(135deg, #ff6b6b, #3742fa);
-            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --primary: #ff4757;
+            --secondary: #3742fa;
+            --dark: #2f3542;
+            --light: #f8f9fa;
+            --gray: #747d8c;
+            --success: #2ed573;
+            --warning: #ffa502;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
         }
 
         * {
@@ -22,22 +26,22 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: #333;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--dark);
             line-height: 1.6;
-            background-color: #f8f9fa;
+            background: #fff;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* Header & Navigation */
+        /* ====== HEADER & NAVIGATION ====== */
         .header {
-            background-color: white;
-            box-shadow: var(--shadow);
+            background: white;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -47,22 +51,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
+            padding: 1.2rem 0;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 1.8rem;
             font-weight: 800;
+            color: var(--dark);
             text-decoration: none;
-            color: var(--dark-color);
         }
 
         .logo-icon {
-            color: var(--primary-color);
+            color: var(--primary);
             font-size: 2.2rem;
+            animation: bounce 3s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .nav-menu {
@@ -73,16 +83,34 @@
 
         .nav-menu a {
             text-decoration: none;
-            color: var(--dark-color);
+            color: var(--dark);
             font-weight: 600;
             padding: 0.5rem 1rem;
-            border-radius: 5px;
+            border-radius: var(--radius);
             transition: all 0.3s;
+            position: relative;
         }
 
-        .nav-menu a:hover, .nav-menu a.active {
-            background-color: var(--light-color);
-            color: var(--primary-color);
+        .nav-menu a:hover {
+            color: var(--primary);
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        .nav-menu a.active {
+            color: var(--primary);
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 50%;
         }
 
         .header-actions {
@@ -91,56 +119,132 @@
             gap: 1.5rem;
         }
 
-        .cart-icon, .user-icon {
+        .header-icon {
             font-size: 1.3rem;
-            color: var(--dark-color);
+            color: var(--dark);
             cursor: pointer;
             position: relative;
+            transition: color 0.3s;
+        }
+
+        .header-icon:hover {
+            color: var(--primary);
         }
 
         .cart-count {
             position: absolute;
             top: -8px;
             right: -8px;
-            background-color: var(--primary-color);
+            background: var(--primary);
             color: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
         }
 
-        /* Hero Banner */
-        .hero {
-            background: var(--gradient);
+        /* ====== BUTTONS ====== */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #ff6b81);
             color: white;
-            padding: 4rem 0;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ====== SECTIONS ====== */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
             text-align: center;
             margin-bottom: 3rem;
-            border-radius: 0 0 20px 20px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ====== HERO BANNER ====== */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 107, 129, 0.1), rgba(55, 66, 250, 0.1));
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80') center/cover;
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+
+        .hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
 
         .hero p {
             font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            color: var(--gray);
+            margin-bottom: 2.5rem;
         }
 
         .sale-badge {
             display: inline-block;
-            background-color: white;
-            color: var(--primary-color);
+            background: var(--primary);
+            color: white;
             padding: 1rem 2.5rem;
             border-radius: 50px;
             font-size: 1.8rem;
@@ -149,115 +253,109 @@
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* ====== CATEGORIES ====== */
+        .categories {
+            background: var(--light);
         }
 
-        .btn-primary {
-            display: inline-block;
-            background-color: white;
-            color: var(--primary-color);
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
 
-        .btn-primary:hover {
-            background-color: transparent;
-            color: white;
-            border-color: white;
-            transform: translateY(-3px);
-        }
-
-        /* Filter Section */
-        .section-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2.2rem;
-            color: var(--dark-color);
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--gradient);
-            border-radius: 2px;
-        }
-
-        .filter-section {
-            margin-bottom: 3rem;
-        }
-
-        .filter-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.8rem 1.8rem;
-            border: 2px solid #ddd;
+        .category-card {
             background: white;
-            color: #555;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--gradient);
-            color: white;
-            border-color: transparent;
+            border-radius: var(--radius);
+            overflow: hidden;
             box-shadow: var(--shadow);
+            transition: all 0.3s;
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            cursor: pointer;
         }
 
-        /* Products Grid */
-        .products-container {
-            margin-bottom: 4rem;
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        /* ====== PRODUCTS ====== */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
+            margin-top: 3rem;
         }
 
         .product-card {
             background: white;
-            border-radius: 15px;
+            border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: all 0.3s;
-            cursor: pointer;
             position: relative;
         }
 
         .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-sale {
+            background: var(--primary);
+            color: white;
+        }
+
+        .badge-new {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-hot {
+            background: var(--warning);
+            color: white;
         }
 
         .product-image {
             width: 100%;
-            height: 300px;
+            height: 320px;
             overflow: hidden;
             position: relative;
-            background-color: #f8f9fa;
+            background: #f8f9fa;
         }
 
         .product-image img {
@@ -271,17 +369,26 @@
             transform: scale(1.05);
         }
 
-        .discount-badge {
+        .quick-view {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--primary-color);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            z-index: 2;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: white;
+            color: var(--dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card:hover .quick-view {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         .product-info {
@@ -289,28 +396,22 @@
         }
 
         .product-category {
-            color: #888;
+            color: var(--gray);
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
         }
 
         .product-name {
             font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: var(--dark-color);
-        }
-
-        .brand-tag {
-            display: inline-block;
-            background: #f1f2f6;
-            color: #666;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .product-price {
@@ -321,244 +422,755 @@
         }
 
         .current-price {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .original-price {
             font-size: 1rem;
-            color: #999;
+            color: var(--gray);
             text-decoration: line-through;
         }
 
-        .add-to-cart {
-            width: 100%;
-            padding: 1rem;
-            background: var(--gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .product-actions .btn {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ====== FILTERS ====== */
+        .filters-section {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: var(--radius);
+            margin-bottom: 3rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .filter-option {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-option:hover,
+        .filter-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover,
+        .color-option.active {
+            box-shadow: 0 0 0 2px var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* ====== PRODUCT DETAIL ====== */
+        .product-detail {
+            background: var(--light);
+        }
+
+        .product-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .product-images {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1.5rem;
+        }
+
+        .thumbnail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info-detail {
+            padding: 1rem;
+        }
+
+        .product-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .product-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .reviews {
+            color: var(--gray);
+        }
+
+        .price-section {
+            background: rgba(255, 71, 87, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+        }
+
+        .current-price-large {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .original-price-large {
+            font-size: 1.5rem;
+            color: var(--gray);
+            text-decoration: line-through;
+            margin-left: 1rem;
+        }
+
+        .discount-percent {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+
+        .size-selection {
+            margin-bottom: 2rem;
+        }
+
+        .size-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .size-option {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
-        .add-to-cart:hover {
-            transform: scale(1.03);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .size-option:hover,
+        .size-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
-        /* Authentication Forms */
-        .auth-section {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-container {
-            background: white;
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 500px;
-            width: 90%;
+        .size-option.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
             position: relative;
         }
 
-        .close-auth {
+        .size-option.disabled::after {
+            content: '';
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 2px;
+            background: var(--gray);
+            transform: translate(-50%, -50%) rotate(-45deg);
         }
 
-        .auth-tabs {
-            display: flex;
+        .color-selection {
             margin-bottom: 2rem;
-            border-bottom: 2px solid #eee;
         }
 
-        .auth-tab {
+        .color-options-detail {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .color-option-detail {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-option-detail.active {
+            box-shadow: 0 0 0 2px var(--primary);
+            transform: scale(1.1);
+        }
+
+        .quantity-selection {
+            margin-bottom: 2rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .qty-input {
+            width: 80px;
+            height: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .stock-status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .in-stock {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .low-stock {
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .out-of-stock {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-buttons .btn {
             flex: 1;
             padding: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-wishlist {
+            width: 60px;
+            padding: 0;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .btn-wishlist:hover,
+        .btn-wishlist.active {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .product-tabs {
+            margin-top: 3rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
             background: none;
             border: none;
             font-size: 1.1rem;
             font-weight: 600;
-            color: #666;
+            color: var(--gray);
             cursor: pointer;
+            position: relative;
             transition: all 0.3s;
         }
 
-        .auth-tab.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
+        .tab-btn.active {
+            color: var(--primary);
         }
 
-        .auth-form {
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .tab-content {
             display: none;
         }
 
-        .auth-form.active {
+        .tab-content.active {
             display: block;
+        }
+
+        .size-chart {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .size-chart th,
+        .size-chart td {
+            border: 1px solid #e0e0e0;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .size-chart th {
+            background: var(--light);
+            font-weight: 600;
+        }
+
+        .size-chart .highlight {
+            background: rgba(255, 71, 87, 0.1);
+            font-weight: 600;
+        }
+
+        .outfit-suggestions {
+            margin-top: 4rem;
+        }
+
+        .outfit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .outfit-card {
+            text-align: center;
+        }
+
+        .outfit-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .outfit-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ====== CART ====== */
+        .cart-section {
+            background: var(--light);
+        }
+
+        .cart-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 100px 2fr 1fr 1fr 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-image {
+            width: 100px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .cart-item-color {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .cart-item-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cart-item-total {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .remove-item {
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .remove-item:hover {
+            color: var(--primary);
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e0e0e0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .coupon-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .coupon-input input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* ====== CHECKOUT ====== */
+        .checkout-section {
+            background: var(--light);
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .checkout-form {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
         .form-group {
             margin-bottom: 1.5rem;
         }
 
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: var(--dark-color);
+            color: var(--dark);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             font-size: 1rem;
-            transition: border 0.3s;
+            transition: border-color 0.3s;
         }
 
-        .form-group input:focus {
-            border-color: var(--primary-color);
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
             outline: none;
         }
 
-        .auth-btn {
-            width: 100%;
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             padding: 1rem;
-            background: var(--gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .payment-method:hover {
+            border-color: var(--primary);
         }
 
-        /* Contact Section */
-        .contact-section {
-            background: var(--gradient);
-            color: white;
-            padding: 4rem 0;
-            border-radius: 20px;
-            margin-bottom: 3rem;
+        .payment-method.active {
+            border-color: var(--primary);
+            background: rgba(255, 71, 87, 0.05);
         }
 
-        .contact-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+        .payment-method input {
+            display: none;
         }
 
-        .contact-info h3, .social-info h3 {
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+        .payment-icon {
+            font-size: 1.5rem;
+            color: var(--gray);
         }
 
-        .contact-details {
-            list-style: none;
-        }
-
-        .contact-details li {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border-radius: 50%;
-            font-size: 1.3rem;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background: white;
-            color: var(--primary-color);
-            transform: translateY(-5px);
-        }
-
-        .shopee-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            color: #ee4d2d;
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 700;
-            margin-top: 1.5rem;
-            transition: all 0.3s;
-        }
-
-        .shopee-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .shopee-logo {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
-        }
-
-        /* Footer */
+        /* ====== FOOTER ====== */
         .footer {
-            background: var(--dark-color);
+            background: var(--dark);
             color: white;
-            padding: 3rem 0 1.5rem;
+            padding: 4rem 0 2rem;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
         .footer-section h4 {
-            margin-bottom: 1.5rem;
             font-size: 1.3rem;
+            margin-bottom: 1.5rem;
             color: white;
         }
 
@@ -571,29 +1183,118 @@
         }
 
         .footer-section a {
-            color: #ddd;
+            color: #dfe6e9;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aaa;
+            color: #b2bec3;
             font-size: 0.9rem;
         }
 
-        /* Responsive Design */
+        /* ====== MODALS ====== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary);
+        }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                gap: 1rem;
+            }
+            
+            .hero::before {
+                width: 40%;
+            }
+            
+            .product-detail-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .cart-content,
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
-                padding: 1rem 0;
             }
             
             .nav-menu {
@@ -601,22 +1302,31 @@
                 justify-content: center;
             }
             
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .hero::before {
+                display: none;
+            }
+            
             .hero h1 {
                 font-size: 2.5rem;
             }
             
-            .sale-badge {
-                font-size: 1.5rem;
-                padding: 0.8rem 2rem;
+            .products-grid,
+            .categories-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
             
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
             
-            .section-title {
-                font-size: 1.8rem;
+            .cart-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
             }
         }
 
@@ -625,80 +1335,27 @@
                 font-size: 2rem;
             }
             
-            .products-grid {
-                grid-template-columns: 1fr;
+            .sale-badge {
+                font-size: 1.4rem;
+                padding: 0.8rem 2rem;
             }
             
-            .filter-buttons {
-                gap: 0.5rem;
+            .section-title h2 {
+                font-size: 2rem;
             }
             
-            .filter-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                padding: 2rem 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Authentication Forms -->
-    <section class="auth-section" id="authSection">
-        <div class="auth-container">
-            <button class="close-auth" onclick="closeAuth()">&times;</button>
-            
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchAuthTab('register')">Đăng Ký</button>
-                <button class="auth-tab" onclick="switchAuthTab('login')">Đăng Nhập</button>
-            </div>
-            
-            <!-- Registration Form -->
-            <form class="auth-form active" id="registerForm">
-                <div class="form-group">
-                    <label for="regFullName">Họ và Tên *</label>
-                    <input type="text" id="regFullName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regPhone">Số điện thoại *</label>
-                    <input type="tel" id="regPhone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regAddress">Địa chỉ gửi hàng *</label>
-                    <input type="text" id="regAddress" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regEmail">Email *</label>
-                    <input type="email" id="regEmail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="regPassword">Mật khẩu *</label>
-                    <input type="password" id="regPassword" required>
-                </div>
-                
-                <button type="submit" class="auth-btn">Đăng Ký Tài Khoản</button>
-            </form>
-            
-            <!-- Login Form -->
-            <form class="auth-form" id="loginForm">
-                <div class="form-group">
-                    <label for="loginIdentifier">Họ tên hoặc Số điện thoại *</label>
-                    <input type="text" id="loginIdentifier" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="loginPassword">Mật khẩu *</label>
-                    <input type="password" id="loginPassword" required>
-                </div>
-                
-                <button type="submit" class="auth-btn">Đăng Nhập</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Header -->
+    <!-- ====== HEADER ====== -->
     <header class="header">
         <div class="container">
             <div class="header-content">
@@ -710,394 +1367,1027 @@
                 <nav>
                     <ul class="nav-menu">
                         <li><a href="#home" class="active">Trang Chủ</a></li>
-                        <li><a href="javascript:void(0)" onclick="filterProducts('all')">Tất Cả</a></li>
-                        <li><a href="javascript:void(0)" onclick="filterProducts('nam')">Nam</a></li>
-                        <li><a href="javascript:void(0)" onclick="filterProducts('nu')">Nữ</a></li>
-                        <li><a href="javascript:void(0)" onclick="filterProducts('tre-em')">Trẻ Em</a></li>
-                        <li><a href="javascript:void(0)" onclick="filterProducts('phu-kien')">Phụ Kiện</a></li>
+                        <li><a href="#shop">Cửa Hàng</a></li>
+                        <li><a href="#nam">Nam</a></li>
+                        <li><a href="#nu">Nữ</a></li>
+                        <li><a href="#tre-em">Trẻ Em</a></li>
+                        <li><a href="#lookbook">Lookbook</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#about">Về Chúng Tôi</a></li>
                     </ul>
                 </nav>
                 
                 <div class="header-actions">
-                    <div class="user-icon" onclick="openAuth('login')">
+                    <div class="header-icon" onclick="openSearch()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="header-icon" onclick="openAuth('login')">
                         <i class="fas fa-user"></i>
                     </div>
-                    <div class="cart-icon">
+                    <div class="header-icon cart-icon" onclick="openCart()">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count">3</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Hero Banner -->
+    <!-- ====== HERO BANNER ====== -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>SALE KHỦNG CUỐI NĂM 2025</h1>
-            <p>Giảm giá lên đến 70% - Thời trang chất lượng cao với giá tốt nhất thị trường</p>
-            <div class="sale-badge">SALE UP TO 70% OFF</div>
-            <a href="#products" class="btn-primary">MUA NGAY <i class="fas fa-arrow-right"></i></a>
-        </div>
-    </section>
-
-    <!-- Filter Section -->
-    <section class="filter-section container">
-        <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
-        <div class="filter-buttons">
-            <button class="filter-btn active" onclick="filterProducts('all')">Tất Cả</button>
-            <button class="filter-btn" onclick="filterProducts('nam')">Thời Trang Nam</button>
-            <button class="filter-btn" onclick="filterProducts('nu')">Thời Trang Nữ</button>
-            <button class="filter-btn" onclick="filterProducts('tre-em')">Trẻ Em</button>
-            <button class="filter-btn" onclick="filterProducts('phu-kien')">Phụ Kiện</button>
-        </div>
-    </section>
-
-    <!-- Products Grid -->
-    <section class="products-container container" id="products">
-        <div class="products-grid" id="productsGrid">
-            <!-- Product 1 - Gucci -->
-            <div class="product-card" data-category="nam">
-                <div class="product-image">
-                    <div class="discount-badge">-50%</div>
-                    <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Sơ Mi Gucci">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Thời Trang Nam</div>
-                    <span class="brand-tag">Gucci</span>
-                    <h3 class="product-name">Áo Sơ Mi Gucci Cao Cấp</h3>
-                    <div class="product-price">
-                        <span class="current-price">8.999.000đ</span>
-                        <span class="original-price">17.999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 2 - Gucci -->
-            <div class="product-card" data-category="nu">
-                <div class="product-image">
-                    <div class="discount-badge">-60%</div>
-                    <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đầm Váy Gucci">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Thời Trang Nữ</div>
-                    <span class="brand-tag">Gucci</span>
-                    <h3 class="product-name">Đầm Dạ Hội Gucci Sang Trọng</h3>
-                    <div class="product-price">
-                        <span class="current-price">12.999.000đ</span>
-                        <span class="original-price">32.999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 3 - Adidas -->
-            <div class="product-card" data-category="nam">
-                <div class="product-image">
-                    <div class="discount-badge">-45%</div>
-                    <img src="https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Thun Adidas">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Thời Trang Nam</div>
-                    <span class="brand-tag">Adidas</span>
-                    <h3 class="product-name">Áo Thun Thể Thao Adidas</h3>
-                    <div class="product-price">
-                        <span class="current-price">549.000đ</span>
-                        <span class="original-price">999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 4 - H&M -->
-            <div class="product-card" data-category="nu">
-                <div class="product-image">
-                    <div class="discount-badge">-55%</div>
-                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Kiểu H&M">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Thời Trang Nữ</div>
-                    <span class="brand-tag">H&M</span>
-                    <h3 class="product-name">Áo Kiểu Công Sở H&M</h3>
-                    <div class="product-price">
-                        <span class="current-price">379.000đ</span>
-                        <span class="original-price">849.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 5 - Adidas Kids -->
-            <div class="product-card" data-category="tre-em">
-                <div class="product-image">
-                    <div class="discount-badge">-70%</div>
-                    <img src="https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đồ Trẻ Em Adidas">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Trẻ Em</div>
-                    <span class="brand-tag">Adidas</span>
-                    <h3 class="product-name">Bộ Đồ Trẻ Em Adidas</h3>
-                    <div class="product-price">
-                        <span class="current-price">299.000đ</span>
-                        <span class="original-price">999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 6 - Phụ Kiện -->
-            <div class="product-card" data-category="phu-kien">
-                <div class="product-image">
-                    <div class="discount-badge">-40%</div>
-                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Túi Xách Gucci">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Phụ Kiện</div>
-                    <span class="brand-tag">Gucci</span>
-                    <h3 class="product-name">Túi Xách Gucci Chính Hãng</h3>
-                    <div class="product-price">
-                        <span class="current-price">15.999.000đ</span>
-                        <span class="original-price">26.999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 7 - Phụ Kiện -->
-            <div class="product-card" data-category="phu-kien">
-                <div class="product-image">
-                    <div class="discount-badge">-35%</div>
-                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Giày Adidas">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Phụ Kiện</div>
-                    <span class="brand-tag">Adidas</span>
-                    <h3 class="product-name">Giày Thể Thao Adidas</h3>
-                    <div class="product-price">
-                        <span class="current-price">1.299.000đ</span>
-                        <span class="original-price">1.999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
-            </div>
-
-            <!-- Product 8 - Phụ Kiện -->
-            <div class="product-card" data-category="phu-kien">
-                <div class="product-image">
-                    <div class="discount-badge">-50%</div>
-                    <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đồng Hồ H&M">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Phụ Kiện</div>
-                    <span class="brand-tag">H&M</span>
-                    <h3 class="product-name">Đồng Hồ Thời Trang H&M</h3>
-                    <div class="product-price">
-                        <span class="current-price">499.000đ</span>
-                        <span class="original-price">999.000đ</span>
-                    </div>
-                    <button class="add-to-cart"><i class="fas fa-cart-plus"></i> Thêm vào giỏ</button>
-                </div>
+            <div class="hero-content">
+                <h1>Xu Hướng Thời Trang 2025</h1>
+                <p>Khám phá bộ sưu tập mới nhất với thiết kế độc đáo và chất lượng vượt trội. Thể hiện phong cách của bạn!</p>
+                <div class="sale-badge">SALE UP TO 70%</div>
+                <a href="#shop" class="btn btn-primary">Mua Sắm Ngay</a>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section container">
-        <h2 class="section-title">LIÊN HỆ VỚI CHÚNG TÔI</h2>
-        <div class="contact-content">
-            <div class="contact-info">
-                <h3>Thông Tin Liên Hệ</h3>
-                <ul class="contact-details">
-                    <li><i class="fas fa-map-marker-alt"></i> <strong>Địa chỉ:</strong> Nghệ An, Việt Nam</li>
-                    <li><i class="fas fa-phone"></i> <strong>Hotline:</strong> 0941.552.919</li>
-                    <li><i class="fas fa-envelope"></i> <strong>Email:</strong> huyquoc3509@gmail.com</li>
-                </ul>
-                
-                <a href="https://collshp.com/9f5oi0ky9l" target="_blank" class="shopee-link">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" alt="Shopee Logo" class="shopee-logo">
-                    <span>Đồ Tui Hay Dùng</span>
-                </a>
+    <!-- ====== CATEGORIES ====== -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Danh Mục Sản Phẩm</h2>
+                <p>Khám phá các danh mục thời trang đa dạng của chúng tôi</p>
             </div>
             
-            <div class="social-info">
-                <h3>Theo Dõi PandaBeo</h3>
-                <p>Kết nối với chúng tôi qua mạng xã hội để cập nhật sản phẩm mới và khuyến mãi</p>
+            <div class="categories-grid">
+                <div class="category-card" onclick="filterByCategory('nam')">
+                    <div class="category-icon">👔</div>
+                    <h3 class="category-title">Thời Trang Nam</h3>
+                    <p>Áo sơ mi, quần tây, đồ thể thao</p>
+                </div>
                 
-                <div class="social-links">
-                    <a href="https://www.facebook.com/huy.mam.395/" target="_blank" title="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="https://www.instagram.com/huy.mam.395/" target="_blank" title="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="https://tiktok.com/@mamhuydeptrai?lang=vi-VN" target="_blank" title="TikTok">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                    <a href="https://www.youtube.com/@PandaBeo2006" target="_blank" title="YouTube">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                <div class="category-card" onclick="filterByCategory('nu')">
+                    <div class="category-icon">👗</div>
+                    <h3 class="category-title">Thời Trang Nữ</h3>
+                    <p>Đầm váy, áo kiểu, công sở</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('ao')">
+                    <div class="category-icon">👕</div>
+                    <h3 class="category-title">Áo</h3>
+                    <p>Sơ mi, thun, polo, khoác</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('quan')">
+                    <div class="category-icon">👖</div>
+                    <h3 class="category-title">Quần</h3>
+                    <p>Jeans, tây, shorts, jogger</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('do-bo')">
+                    <div class="category-icon">👚</div>
+                    <h3 class="category-title">Đồ Bộ</h3>
+                    <p>Set đồ phối sẵn</p>
+                </div>
+                
+                <div class="category-card" onclick="filterByCategory('phu-kien')">
+                    <div class="category-icon">🧢</div>
+                    <h3 class="category-title">Phụ Kiện</h3>
+                    <p>Giày, túi, mũ, thắt lưng</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ====== NEW PRODUCTS ====== -->
+    <section class="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Sản Phẩm Mới</h2>
+                <p>Cập nhật những mẫu thiết kế mới nhất</p>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card" onclick="openProductDetail(1)">
+                    <div class="product-badges">
+                        <span class="badge badge-new">Mới</span>
+                        <span class="badge badge-sale">-30%</span>
+                    </div>
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Sơ Mi Nam">
+                        <button class="quick-view" onclick="openQuickView(1)">Xem Nhanh</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Áo Sơ Mi</div>
+                        <h3 class="product-name">Áo Sơ Mi Nam Dài Tay Cao Cấp</h3>
+                        <div class="product-price">
+                            <span class="current-price">599.000đ</span>
+                            <span class="original-price">799.000đ</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart(1)">Thêm Vào Giỏ</button>
+                            <button class="btn btn-outline" onclick="addToWishlist(1)">Yêu Thích</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card" onclick="openProductDetail(2)">
+                    <div class="product-badges">
+                        <span class="badge badge-hot">Hot</span>
+                    </div>
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Đầm Dự Tiệc">
+                        <button class="quick-view" onclick="openQuickView(2)">Xem Nhanh</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Đầm Váy</div>
+                        <h3 class="product-name">Đầm Dự Tiệc Sang Trọng</h3>
+                        <div class="product-price">
+                            <span class="current-price">1.299.000đ</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart(2)">Thêm Vào Giỏ</button>
+                            <button class="btn btn-outline" onclick="addToWishlist(2)">Yêu Thích</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card" onclick="openProductDetail(3)">
+                    <div class="product-badges">
+                        <span class="badge badge-sale">-40%</span>
+                    </div>
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Áo Hoodie">
+                        <button class="quick-view" onclick="openQuickView(3)">Xem Nhanh</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Áo Hoodie</div>
+                        <h3 class="product-name">Áo Hoodie Unisex Thể Thao</h3>
+                        <div class="product-price">
+                            <span class="current-price">499.000đ</span>
+                            <span class="original-price">799.000đ</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart(3)">Thêm Vào Giỏ</button>
+                            <button class="btn btn-outline" onclick="addToWishlist(3)">Yêu Thích</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card" onclick="openProductDetail(4)">
+                    <div class="product-badges">
+                        <span class="badge badge-new">Mới</span>
+                        <span class="badge badge-sale">-25%</span>
+                    </div>
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Quần Jeans">
+                        <button class="quick-view" onclick="openQuickView(4)">Xem Nhanh</button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Quần Jeans</div>
+                        <h3 class="product-name">Quần Jeans Nam Slim Fit</h3>
+                        <div class="product-price">
+                            <span class="current-price">799.000đ</span>
+                            <span class="original-price">1.099.000đ</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary" onclick="addToCart(4)">Thêm Vào Giỏ</button>
+                            <button class="btn btn-outline" onclick="addToWishlist(4)">Yêu Thích</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FILTERS SECTION ====== -->
+    <section class="filters-section" id="shop">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tìm Kiếm Theo Sở Thích</h2>
+                <p>Lọc sản phẩm theo các tiêu chí của bạn</p>
+            </div>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-ruler"></i>
+                        <span>Kích Cỡ</span>
+                    </div>
+                    <div class="filter-options">
+                        <span class="filter-option active">Tất Cả</span>
+                        <span class="filter-option">S</span>
+                        <span class="filter-option">M</span>
+                        <span class="filter-option">L</span>
+                        <span class="filter-option">XL</span>
+                        <span class="filter-option">XXL</span>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-palette"></i>
+                        <span>Màu Sắc</span>
+                    </div>
+                    <div class="color-options">
+                        <div class="color-option active" style="background: #000;"></div>
+                        <div class="color-option" style="background: #fff; border: 1px solid #ccc;"></div>
+                        <div class="color-option" style="background: #ff4757;"></div>
+                        <div class="color-option" style="background: #3742fa;"></div>
+                        <div class="color-option" style="background: #2ed573;"></div>
+                        <div class="color-option" style="background: #ffa502;"></div>
+                        <div class="color-option" style="background: #a4b0be;"></div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-tshirt"></i>
+                        <span>Chất Liệu</span>
+                    </div>
+                    <div class="filter-options">
+                        <span class="filter-option">Cotton</span>
+                        <span class="filter-option">Kaki</span>
+                        <span class="filter-option">Jeans</span>
+                        <span class="filter-option">Len</span>
+                        <span class="filter-option">Lụa</span>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Kiểu Dáng</span>
+                    </div>
+                    <div class="filter-options">
+                        <span class="filter-option">Regular</span>
+                        <span class="filter-option">Slim Fit</span>
+                        <span class="filter-option">Oversize</span>
+                        <span class="filter-option">Body Fit</span>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-tags"></i>
+                        <span>Giá</span>
+                    </div>
+                    <div class="filter-options">
+                        <span class="filter-option">Dưới 500K</span>
+                        <span class="filter-option">500K - 1M</span>
+                        <span class="filter-option">1M - 2M</span>
+                        <span class="filter-option">Trên 2M</span>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <div class="filter-title">
+                        <i class="fas fa-copyright"></i>
+                        <span>Thương Hiệu</span>
+                    </div>
+                    <div class="filter-options">
+                        <span class="filter-option">PandaBeo</span>
+                        <span class="filter-option">Gucci</span>
+                        <span class="filter-option">Adidas</span>
+                        <span class="filter-option">H&M</span>
+                        <span class="filter-option">Zara</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BEST SELLERS ====== -->
+    <section class="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Sản Phẩm Bán Chạy</h2>
+                <p>Được khách hàng yêu thích nhất</p>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Thêm các sản phẩm bán chạy tương tự -->
+                <!-- Để ngắn gọn, tôi sẽ không lặp lại code sản phẩm -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUTFIT SUGGESTIONS ====== -->
+    <section class="outfit-suggestions">
+        <div class="container">
+            <div class="section-title">
+                <h2>Gợi Ý Outfit</h2>
+                <p>Phối đồ hoàn hảo cho mọi dịp</p>
+            </div>
+            
+            <div class="outfit-grid">
+                <div class="outfit-card">
+                    <div class="outfit-image">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Outfit 1">
+                    </div>
+                    <h4>Phong Cách Công Sở</h4>
+                    <p>Áo sơ mi + Quần tây + Giày tây</p>
+                </div>
+                
+                <div class="outfit-card">
+                    <div class="outfit-image">
+                        <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Outfit 2">
+                    </div>
+                    <h4>Thể Thao Năng Động</h4>
+                    <p>Hoodie + Quần jogger + Giày thể thao</p>
+                </div>
+                
+                <div class="outfit-card">
+                    <div class="outfit-image">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Outfit 3">
+                    </div>
+                    <h4>Dạo Phố Cuối Tuần</h4>
+                    <p>Áo thun + Quần jeans + Sneaker</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>🐼 PandaBeo</h4>
-                    <p>Thương hiệu thời trang chất lượng cao với giá tốt nhất. Cam kết sản phẩm chính hãng 100%.</p>
+                    <p>Thương hiệu thời trang cao cấp với chất lượng và thiết kế vượt trội. Cam kết mang đến trải nghiệm mua sắm tốt nhất.</p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/huy.mam.395" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/huy.mam.395" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://tiktok.com/@mamhuydeptrai" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://youtube.com/@PandaBeo2006" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
+                
                 <div class="footer-section">
-                    <h4>Hỗ Trợ Khách Hàng</h4>
+                    <h4>Thông Tin</h4>
                     <ul>
-                        <li><a href="#">Chính sách đổi trả</a></li>
-                        <li><a href="#">Hướng dẫn mua hàng</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#about">Về Chúng Tôi</a></li>
+                        <li><a href="#contact">Liên Hệ</a></li>
+                        <li><a href="#career">Tuyển Dụng</a></li>
+                        <li><a href="#stores">Hệ Thống Cửa Hàng</a></li>
+                        <li><a href="#lookbook">Lookbook</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-section">
-                    <h4>Thông Tin Liên Hệ</h4>
+                    <h4>Hỗ Trợ</h4>
+                    <ul>
+                        <li><a href="#faq">Câu Hỏi Thường Gặp</a></li>
+                        <li><a href="#shipping">Vận Chuyển</a></li>
+                        <li><a href="#return">Đổi Trả</a></li>
+                        <li><a href="#privacy">Bảo Mật</a></li>
+                        <li><a href="#terms">Điều Khoản</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Liên Hệ</h4>
                     <ul>
                         <li><i class="fas fa-map-marker-alt"></i> Nghệ An, Việt Nam</li>
                         <li><i class="fas fa-phone"></i> 0941.552.919</li>
                         <li><i class="fas fa-envelope"></i> huyquoc3509@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> 8:00 - 22:00 Hàng ngày</li>
                     </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Kết Nối Với Chúng Tôi</h4>
-                    <ul>
-                        <li><a href="https://www.facebook.com/huy.mam.395/" target="_blank">Facebook</a></li>
-                        <li><a href="https://www.instagram.com/huy.mam.395/" target="_blank">Instagram</a></li>
-                        <li><a href="https://tiktok.com/@mamhuydeptrai?lang=vi-VN" target="_blank">TikTok</a></li>
-                        <li><a href="https://www.youtube.com/@PandaBeo2006" target="_blank">YouTube</a></li>
-                    </ul>
+                    <a href="https://collshp.com/9f5oi0ky9l" target="_blank" style="display: inline-block; margin-top: 1rem; color: #ee4d2d; font-weight: 600;">
+                        <i class="fas fa-shopping-cart"></i> Shopee: Đồ Tui Hay Dùng
+                    </a>
                 </div>
             </div>
+            
             <div class="footer-bottom">
                 <p>&copy; 2025 PandaBeo. All rights reserved. Made with <i class="fas fa-heart" style="color:#ff4757;"></i></p>
             </div>
         </div>
     </footer>
 
+    <!-- ====== MODALS ====== -->
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            <h2 style="margin-bottom: 2rem;">Đăng Nhập</h2>
+            <div class="form-group">
+                <label>Email hoặc Số điện thoại</label>
+                <input type="text" placeholder="Nhập email hoặc số điện thoại">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" placeholder="Nhập mật khẩu">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Đăng Nhập</button>
+            <p style="text-align: center; margin-top: 1rem;">
+                Chưa có tài khoản? <a href="javascript:void(0)" onclick="switchAuth()" style="color: var(--primary);">Đăng ký ngay</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('registerModal')">&times;</button>
+            <h2 style="margin-bottom: 2rem;">Đăng Ký Tài Khoản</h2>
+            <div class="form-group">
+                <label>Họ và Tên</label>
+                <input type="text" placeholder="Nhập họ và tên">
+            </div>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="tel" placeholder="Nhập số điện thoại">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Nhập email">
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" placeholder="Nhập mật khẩu">
+            </div>
+            <div class="form-group">
+                <label>Xác nhận mật khẩu</label>
+                <input type="password" placeholder="Nhập lại mật khẩu">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Đăng Ký</button>
+            <p style="text-align: center; margin-top: 1rem;">
+                Đã có tài khoản? <a href="javascript:void(0)" onclick="switchAuth()" style="color: var(--primary);">Đăng nhập ngay</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Product Detail Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content" style="max-width: 1200px;">
+            <button class="close-modal" onclick="closeModal('productModal')">&times;</button>
+            <div class="product-detail-content" id="productDetailContent">
+                <!-- Nội dung sẽ được thêm bằng JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <button class="close-modal" onclick="closeModal('cartModal')">&times;</button>
+            <h2 style="margin-bottom: 2rem;">Giỏ Hàng</h2>
+            <div class="cart-content">
+                <div class="cart-items" id="cartItems">
+                    <!-- Nội dung giỏ hàng sẽ được thêm bằng JavaScript -->
+                </div>
+                <div class="cart-summary">
+                    <h3 class="summary-title">Tổng Hợp</h3>
+                    <div class="summary-item">
+                        <span>Tạm Tính</span>
+                        <span>2.397.000đ</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Giảm Giá</span>
+                        <span>-300.000đ</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Phí Vận Chuyển</span>
+                        <span>30.000đ</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Tổng Cộng</span>
+                        <span>2.127.000đ</span>
+                    </div>
+                    <div class="coupon-input">
+                        <input type="text" placeholder="Nhập mã giảm giá">
+                        <button class="btn btn-outline">Áp Dụng</button>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="openCheckout()">Thanh Toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <button class="close-modal" onclick="closeModal('checkoutModal')">&times;</button>
+            <h2 style="margin-bottom: 2rem;">Thanh Toán</h2>
+            <div class="checkout-content">
+                <div class="checkout-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Thông Tin Khách Hàng</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Họ và Tên *</label>
+                                <input type="text" placeholder="Nhập họ và tên">
+                            </div>
+                            <div class="form-group">
+                                <label>Số điện thoại *</label>
+                                <input type="tel" placeholder="Nhập số điện thoại">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" placeholder="Nhập email">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Địa Chỉ Giao Hàng</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tỉnh/Thành phố *</label>
+                                <select>
+                                    <option>Chọn tỉnh/thành phố</option>
+                                    <option>Hà Nội</option>
+                                    <option>Nghệ An</option>
+                                    <option>TP. Hồ Chí Minh</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quận/Huyện *</label>
+                                <select>
+                                    <option>Chọn quận/huyện</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Địa chỉ cụ thể *</label>
+                                <input type="text" placeholder="Số nhà, tên đường">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-credit-card"></i> Phương Thức Thanh Toán</h3>
+                        <div class="payment-methods">
+                            <label class="payment-method active">
+                                <input type="radio" name="payment" checked>
+                                <i class="fas fa-money-bill-wave payment-icon"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Thanh toán khi nhận hàng (COD)</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Thanh toán bằng tiền mặt khi nhận hàng</div>
+                                </div>
+                            </label>
+                            
+                            <label class="payment-method">
+                                <input type="radio" name="payment">
+                                <i class="fas fa-qrcode payment-icon"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Chuyển khoản ngân hàng</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Chuyển khoản qua Internet Banking</div>
+                                </div>
+                            </label>
+                            
+                            <label class="payment-method">
+                                <input type="radio" name="payment">
+                                <i class="fab fa-cc-visa payment-icon"></i>
+                                <div>
+                                    <div style="font-weight: 600;">Thẻ Visa/Mastercard</div>
+                                    <div style="font-size: 0.9rem; color: var(--gray);">Thanh toán bằng thẻ quốc tế</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-sticky-note"></i> Ghi Chú Đơn Hàng</h3>
+                        <div class="form-group">
+                            <textarea rows="4" placeholder="Ghi chú về đơn hàng (không bắt buộc)"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cart-summary">
+                    <h3 class="summary-title">Đơn Hàng</h3>
+                    <div class="summary-item">
+                        <span>Tạm Tính</span>
+                        <span>2.397.000đ</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Giảm Giá</span>
+                        <span>-300.000đ</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Phí Vận Chuyển</span>
+                        <span>30.000đ</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Tổng Cộng</span>
+                        <span>2.127.000đ</span>
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Đặt Hàng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Filter products functionality
-        function filterProducts(category) {
-            const products = document.querySelectorAll('.product-card');
-            const buttons = document.querySelectorAll('.filter-btn');
-            const navLinks = document.querySelectorAll('.nav-menu a');
-            
-            // Update active state of filter buttons
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Update active state of navigation links
-            navLinks.forEach(link => {
-                if (link.getAttribute('onclick') === `filterProducts('${category}')`) {
-                    link.classList.add('active');
-                } else if (link.getAttribute('href') === '#home') {
-                    // Keep home active if not filtering
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-            
-            // Filter products
-            products.forEach(product => {
-                if (category === 'all') {
-                    product.style.display = 'block';
-                } else {
-                    if (product.dataset.category === category) {
-                        product.style.display = 'block';
-                    } else {
-                        product.style.display = 'none';
-                    }
-                }
-            });
+        // ====== GLOBAL VARIABLES ======
+        let cart = [
+            { id: 1, name: "Áo Sơ Mi Nam", color: "Trắng", size: "L", price: 599000, quantity: 1, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" },
+            { id: 2, name: "Đầm Dự Tiệc", color: "Đen", size: "M", price: 1299000, quantity: 1, image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" },
+            { id: 3, name: "Áo Hoodie", color: "Xám", size: "XL", price: 499000, quantity: 1, image: "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" }
+        ];
+
+        let wishlist = [];
+        let currentProductId = null;
+
+        // ====== MODAL FUNCTIONS ======
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Add to cart functionality
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const cartCount = document.querySelector('.cart-count');
-                let currentCount = parseInt(cartCount.textContent);
-                cartCount.textContent = currentCount + 1;
-                
-                this.innerHTML = '<i class="fas fa-check"></i> Đã thêm';
-                this.style.background = '#00b894';
-                
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-cart-plus"></i> Thêm vào giỏ';
-                    this.style.background = '';
-                }, 2000);
-            });
-        });
-
-        // Authentication functions
-        function openAuth(formType) {
-            document.getElementById('authSection').style.display = 'flex';
-            switchAuthTab(formType);
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        function closeAuth() {
-            document.getElementById('authSection').style.display = 'none';
-        }
-
-        function switchAuthTab(tab) {
-            // Update tabs
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            
-            // Activate selected tab
-            if (tab === 'register') {
-                document.querySelector('.auth-tab:first-child').classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
+        function openAuth(type) {
+            closeModal('loginModal');
+            closeModal('registerModal');
+            if (type === 'login') {
+                openModal('loginModal');
             } else {
-                document.querySelector('.auth-tab:last-child').classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
+                openModal('registerModal');
             }
         }
 
-        // Form submission handlers
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Đăng ký thành công! Chào mừng bạn đến với PandaBeo.');
-            closeAuth();
+        function switchAuth() {
+            if (document.getElementById('loginModal').classList.contains('active')) {
+                closeModal('loginModal');
+                openModal('registerModal');
+            } else {
+                closeModal('registerModal');
+                openModal('loginModal');
+            }
+        }
+
+        function openCart() {
+            updateCartDisplay();
+            openModal('cartModal');
+        }
+
+        function openCheckout() {
+            closeModal('cartModal');
+            openModal('checkoutModal');
+        }
+
+        // ====== PRODUCT FUNCTIONS ======
+        function openProductDetail(productId) {
+            currentProductId = productId;
+            const productDetailHTML = `
+                <div class="product-images">
+                    <div class="thumbnail-list">
+                        <div class="thumbnail active">
+                            <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Product 1">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Product 2">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Product 3">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="Product 4">
+                        </div>
+                    </div>
+                    <div class="main-image">
+                        <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Main Product">
+                    </div>
+                </div>
+                <div class="product-info-detail">
+                    <div class="product-breadcrumb">
+                        <span>Trang chủ</span> <i class="fas fa-chevron-right"></i>
+                        <span>Nam</span> <i class="fas fa-chevron-right"></i>
+                        <span>Áo Sơ Mi</span>
+                    </div>
+                    
+                    <h1 class="product-title">Áo Sơ Mi Nam Dài Tay Cao Cấp</h1>
+                    
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="reviews">(128 đánh giá)</span>
+                    </div>
+                    
+                    <div class="price-section">
+                        <span class="current-price-large">599.000đ</span>
+                        <span class="original-price-large">799.000đ</span>
+                        <span class="discount-percent">-25%</span>
+                    </div>
+                    
+                    <div class="size-selection">
+                        <h3>Kích Cỡ</h3>
+                        <div class="size-options">
+                            <div class="size-option">S</div>
+                            <div class="size-option active">M</div>
+                            <div class="size-option">L</div>
+                            <div class="size-option">XL</div>
+                            <div class="size-option disabled">XXL</div>
+                        </div>
+                        <div class="stock-status">
+                            <span class="in-stock">Còn hàng: 15 sản phẩm</span>
+                        </div>
+                    </div>
+                    
+                    <div class="color-selection">
+                        <h3>Màu Sắc</h3>
+                        <div class="color-options-detail">
+                            <div class="color-option-detail active" style="background: #fff; border: 1px solid #ccc;"></div>
+                            <div class="color-option-detail" style="background: #000;"></div>
+                            <div class="color-option-detail" style="background: #a4b0be;"></div>
+                            <div class="color-option-detail" style="background: #3742fa;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="quantity-selection">
+                        <h3>Số Lượng</h3>
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                            <input type="text" class="qty-input" value="1" readonly>
+                            <button class="qty-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="addToCart(${productId})">
+                            <i class="fas fa-cart-plus"></i> Thêm Vào Giỏ
+                        </button>
+                        <button class="btn btn-outline" onclick="buyNow(${productId})">
+                            <i class="fas fa-bolt"></i> Mua Ngay
+                        </button>
+                        <button class="btn-wishlist" onclick="addToWishlist(${productId})">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="product-tabs">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" onclick="switchTab('description')">Mô Tả</button>
+                            <button class="tab-btn" onclick="switchTab('details')">Chi Tiết</button>
+                            <button class="tab-btn" onclick="switchTab('size-chart')">Bảng Size</button>
+                            <button class="tab-btn" onclick="switchTab('reviews')">Đánh Giá</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="description">
+                            <h3>Mô Tả Sản Phẩm</h3>
+                            <p>Áo sơ mi nam cao cấp với chất liệu cotton 100%, thoáng mát và thấm hút mồ hôi tốt. Thiết kế form regular phù hợp với nhiều dáng người.</p>
+                            <ul>
+                                <li>Chất liệu: Cotton 100%</li>
+                                <li>Form dáng: Regular fit</li>
+                                <li>Màu sắc: Trắng, Đen, Xám, Xanh</li>
+                                <li>Phù hợp: Đi làm, dạo phố, sự kiện</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tab-content" id="details">
+                            <h3>Chi Tiết Sản Phẩm</h3>
+                            <table class="size-chart">
+                                <thead>
+                                    <tr>
+                                        <th>Thông Số</th>
+                                        <th>Chi Tiết</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Chất liệu</td><td>Cotton 100%</td></tr>
+                                    <tr><td>Kiểu dáng</td><td>Regular Fit</td></tr>
+                                    <tr><td>Chiều dài</td><td>75cm (size M)</td></tr>
+                                    <tr><td>Ngực</td><td>104cm (size M)</td></tr>
+                                    <tr><td>Tay áo</td><td>64cm (size M)</td></tr>
+                                    <tr><td>Bảo quản</td><td>Giặt máy 30°C, không sấy</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="tab-content" id="size-chart">
+                            <h3>Bảng Size</h3>
+                            <table class="size-chart">
+                                <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Ngực (cm)</th>
+                                        <th>Eo (cm)</th>
+                                        <th>Hông (cm)</th>
+                                        <th>Chiều cao (cm)</th>
+                                        <th>Cân nặng (kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>S</td><td>96-100</td><td>80-84</td><td>96-100</td><td>160-170</td><td>50-60</td></tr>
+                                    <tr class="highlight"><td>M</td><td>100-104</td><td>84-88</td><td>100-104</td><td>165-175</td><td>55-65</td></tr>
+                                    <tr><td>L</td><td>104-108</td><td>88-92</td><td>104-108</td><td>170-180</td><td>60-70</td></tr>
+                                    <tr><td>XL</td><td>108-112</td><td>92-96</td><td>108-112</td><td>175-185</td><td>65-75</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="tab-content" id="reviews">
+                            <h3>Đánh Giá (128)</h3>
+                            <p>Khách hàng đánh giá sản phẩm này rất tốt về chất lượng và form dáng.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('productDetailContent').innerHTML = productDetailHTML;
+            openModal('productModal');
+        }
+
+        function openQuickView(productId) {
+            event.stopPropagation();
+            openProductDetail(productId);
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function changeQuantity(change) {
+            const input = document.querySelector('.qty-input');
+            let current = parseInt(input.value);
+            current = Math.max(1, current + change);
+            input.value = current;
+        }
+
+        // ====== CART FUNCTIONS ======
+        function addToCart(productId) {
+            const product = {
+                id: productId,
+                name: "Áo Sơ Mi Nam",
+                color: "Trắng",
+                size: "M",
+                price: 599000,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80"
+            };
+            
+            cart.push(product);
+            updateCartCount();
+            updateCartDisplay();
+            
+            alert('Đã thêm sản phẩm vào giỏ hàng!');
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            let total = 0;
+            
+            cartItems.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <img src="${item.image}" alt="${item.name}">
+                        </div>
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <div class="cart-item-meta">
+                                <span class="cart-item-color">
+                                    Màu: <span class="color-dot" style="background: #fff; border: 1px solid #ccc;"></span> ${item.color}
+                                </span>
+                                <span>Size: ${item.size}</span>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">${item.price.toLocaleString()}đ</div>
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn" onclick="updateCartQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateCartQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <div class="cart-item-total">${itemTotal.toLocaleString()}đ</div>
+                        <div class="remove-item" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update total in summary
+            const summaryTotal = document.querySelector('.cart-summary .summary-total span:last-child');
+            if (summaryTotal) {
+                summaryTotal.textContent = total.toLocaleString() + 'đ';
+            }
+        }
+
+        function updateCartQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = Math.max(1, item.quantity + change);
+                updateCartCount();
+                updateCartDisplay();
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        // ====== WISHLIST FUNCTIONS ======
+        function addToWishlist(productId) {
+            if (!wishlist.includes(productId)) {
+                wishlist.push(productId);
+                event.target.innerHTML = '<i class="fas fa-heart"></i>';
+                event.target.classList.add('active');
+                alert('Đã thêm vào danh sách yêu thích!');
+            } else {
+                wishlist = wishlist.filter(id => id !== productId);
+                event.target.innerHTML = '<i class="far fa-heart"></i>';
+                event.target.classList.remove('active');
+                alert('Đã xóa khỏi danh sách yêu thích!');
+            }
+        }
+
+        // ====== FILTER FUNCTIONS ======
+        function filterByCategory(category) {
+            alert(`Đang lọc theo danh mục: ${category}`);
+            // Thực hiện lọc sản phẩm
+        }
+
+        // ====== UTILITY FUNCTIONS ======
+        function openSearch() {
+            const searchTerm = prompt("Nhập từ khóa tìm kiếm:");
+            if (searchTerm) {
+                alert(`Đang tìm kiếm: ${searchTerm}`);
+            }
+        }
+
+        function buyNow(productId) {
+            addToCart(productId);
+            closeModal('productModal');
+            openCart();
+        }
+
+        // ====== INITIALIZATION ======
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            
+            // Add click handlers for thumbnails
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.thumbnail')) {
+                    const thumbnails = document.querySelectorAll('.thumbnail');
+                    const mainImage = document.querySelector('.main-image img');
+                    
+                    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+                    e.target.closest('.thumbnail').classList.add('active');
+                    
+                    if (e.target.tagName === 'IMG') {
+                        mainImage.src = e.target.src;
+                    }
+                }
+                
+                // Add click handlers for color options
+                if (e.target.closest('.color-option-detail')) {
+                    const colorOptions = document.querySelectorAll('.color-option-detail');
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    e.target.closest('.color-option-detail').classList.add('active');
+                }
+                
+                // Add click handlers for size options
+                if (e.target.closest('.size-option:not(.disabled)')) {
+                    const sizeOptions = document.querySelectorAll('.size-option:not(.disabled)');
+                    sizeOptions.forEach(opt => opt.classList.remove('active'));
+                    e.target.closest('.size-option').classList.add('active');
+                }
+            });
         });
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Đăng nhập thành công!');
-            closeAuth();
-        });
-
-        // Smooth scrolling for navigation links
+        // ====== SMOOTH SCROLL ======
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#') return;
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
                 
-                if (href.startsWith('#') && href !== '#home') {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
                 }
             });
-        });
-
-        // Close auth when clicking outside
-        document.getElementById('authSection').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAuth();
-            }
         });
     </script>
 </body>
