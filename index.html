@@ -36,6 +36,7 @@
             color: var(--dark);
             background-color: #ffffff;
             font-size: 14px;
+            overflow-x: hidden;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -272,6 +273,11 @@
             background: #1a1e27;
         }
         
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
         /* Sections */
         .section-title {
             text-align: center;
@@ -301,6 +307,291 @@
             color: var(--gray);
             font-size: 16px;
             margin-top: 20px;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-hover);
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--primary);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        /* Auth Modal */
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-light);
+            margin-bottom: 20px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
+        }
+        
+        /* Cart Modal */
+        .cart-items {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-light);
+            gap: 15px;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--gray-light);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .quantity-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .quantity {
+            width: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .cart-remove {
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .cart-remove:hover {
+            color: var(--primary);
+        }
+        
+        .cart-summary {
+            padding: 20px;
+            background: var(--light);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+        }
+        
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .cart-summary-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--gray-light);
+        }
+        
+        .checkout-form {
+            display: none;
+        }
+        
+        .checkout-form.active {
+            display: block;
+        }
+        
+        /* Checkout Steps */
+        .checkout-steps {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .checkout-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .checkout-step.active {
+            color: var(--primary);
+        }
+        
+        .checkout-step.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
         }
         
         /* Filter Section */
@@ -795,6 +1086,27 @@
             font-size: 14px;
         }
         
+        /* Content Sections */
+        .content-section {
+            padding: 60px 0;
+            min-height: 400px;
+        }
+        
+        .content-section .container {
+            max-width: 800px;
+        }
+        
+        .content-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .content-section p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
         /* Responsive */
         @media (max-width: 992px) {
             .nav-menu {
@@ -838,6 +1150,10 @@
             .footer-content {
                 grid-template-columns: 1fr;
             }
+            
+            .modal-content {
+                max-width: 95%;
+            }
         }
         
         @media (max-width: 576px) {
@@ -859,6 +1175,11 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
         }
         
         /* Utility Classes */
@@ -866,6 +1187,7 @@
         .mb-2 { margin-bottom: 2rem; }
         .text-center { text-align: center; }
         .text-primary { color: var(--primary); }
+        .d-none { display: none; }
     </style>
 </head>
 <body>
@@ -912,12 +1234,12 @@
                     <div class="header-icon" onclick="openSearch()">
                         <i class="fas fa-search"></i>
                     </div>
-                    <div class="header-icon" onclick="openAuth('login')">
+                    <div class="header-icon" onclick="openAuthModal()">
                         <i class="fas fa-user"></i>
                     </div>
-                    <div class="header-icon cart-icon" onclick="openCart()">
+                    <div class="header-icon cart-icon" onclick="openCartModal()">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">3</span>
+                        <span class="cart-count" id="cartCount">0</span>
                     </div>
                 </div>
             </div>
@@ -928,10 +1250,10 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>BỘ SƯU TẬP MÙA HÈ 2024</h1>
+                <h1>BỘ SƯU TẬP MÙA HÈ 2025</h1>
                 <p>Khám phá những xu hướng thời trang mới nhất với chất lượng vượt trội và thiết kế độc đáo. Thể hiện phong cách của riêng bạn!</p>
                 <div class="sale-badge">SALE UP TO 70%</div>
-                <a href="#shop" class="btn btn-primary">MUA SẮP NGAY</a>
+                <a href="#shop" class="btn btn-primary">MUA SẮM NGAY</a>
             </div>
         </div>
     </section>
@@ -973,7 +1295,6 @@
             </div>
             
             <div class="selected-filters" id="selectedFilters">
-                <!-- Các filter đã chọn sẽ hiển thị ở đây -->
                 <span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>
             </div>
             
@@ -1091,6 +1412,55 @@
         </div>
     </section>
 
+    <!-- ====== CONTENT SECTIONS ====== -->
+    <section class="content-section" id="nam">
+        <div class="container">
+            <h2>Thời Trang Nam</h2>
+            <p>Khám phá bộ sưu tập thời trang nam mới nhất với những thiết kế trẻ trung, năng động và lịch lãm. Từ những bộ vest công sở đến áo thun casual, chúng tôi mang đến cho bạn sự lựa chọn đa dạng và phong phú.</p>
+            <p>Chất liệu cao cấp, đường may tinh tế cùng với những xu hướng thời trang mới nhất sẽ giúp bạn tự tin tỏa sáng trong mọi hoàn cảnh.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="nu" style="background: var(--light);">
+        <div class="container">
+            <h2>Thời Trang Nữ</h2>
+            <p>Bộ sưu tập thời trang nữ với những thiết kế thanh lịch, quyến rũ và hiện đại. Từ váy dự tiệc sang trọng đến những set đồ hàng ngày thoải mái, chúng tôi hiểu được nhu cầu đa dạng của phái đẹp.</p>
+            <p>Với sự kết hợp hài hòa giữa màu sắc, chất liệu và kiểu dáng, mỗi sản phẩm đều được chăm chút tỉ mỉ để mang đến vẻ đẹp hoàn hảo cho người mặc.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="tre-em">
+        <div class="container">
+            <h2>Thời Trang Trẻ Em</h2>
+            <p>Những bộ đồ trẻ em đáng yêu, an toàn và thoải mái cho các bé. Chúng tôi lựa chọn những chất liệu mềm mại, thân thiện với làn da nhạy cảm của trẻ nhỏ.</p>
+            <p>Thiết kế đa dạng từ đồ sơ sinh đến trang phục cho bé trai, bé gái với màu sắc tươi sáng, họa tiết ngộ nghĩnh giúp các bé thoải mái vận động và phát triển.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="lookbook" style="background: var(--light);">
+        <div class="container">
+            <h2>Lookbook</h2>
+            <p>Khám phá những phong cách mix & match độc đáo từ các fashionista. Lookbook của chúng tôi sẽ mang đến cho bạn cảm hứng về thời trang và cách phối đồ sáng tạo.</p>
+            <p>Từ phong cách công sở chuyên nghiệp đến street style cá tính, từ dạo phố đến dự tiệc - tất cả đều được thể hiện một cách tinh tế và thời thượng.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="blog">
+        <div class="container">
+            <h2>Blog Thời Trang</h2>
+            <p>Cập nhật những xu hướng thời trang mới nhất, tips phối đồ và những câu chuyện thú vị về thế giới thời trang. Blog của PandaBeo là nơi chia sẻ kiến thức và cảm hứng thời trang.</p>
+            <p>Đọc những bài viết từ các chuyên gia thời trang, học cách chăm sóc quần áo đúng cách và khám phá những bí quyết để luôn tự tin với phong cách của riêng mình.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="about" style="background: var(--light);">
+        <div class="container">
+            <h2>Về Chúng Tôi</h2>
+            <p>PandaBeo được thành lập với sứ mệnh mang đến cho khách hàng những sản phẩm thời trang chất lượng cao với giá cả hợp lý. Chúng tôi tin rằng thời trang không chỉ là quần áo, mà còn là cách thể hiện cá tính và phong cách sống.</p>
+            <p>Với đội ngũ thiết kế tài năng và nhân viên tận tâm, chúng tôi không ngừng sáng tạo để mang đến những sản phẩm tốt nhất cho khách hàng. PandaBeo cam kết mang đến trải nghiệm mua sắm tuyệt vời nhất.</p>
+        </div>
+    </section>
+
     <!-- ====== NEWSLETTER ====== -->
     <section class="newsletter">
         <div class="container">
@@ -1177,7 +1547,153 @@
         </div>
     </footer>
 
+    <!-- ====== AUTH MODAL ====== -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Đăng Nhập / Đăng Ký</h2>
+                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Đăng Nhập</button>
+                    <button class="auth-tab" onclick="switchAuthTab('register')">Đăng Ký</button>
+                </div>
+                
+                <div class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" placeholder="Nhập email của bạn">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Mật khẩu</label>
+                        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="login()">ĐĂNG NHẬP</button>
+                </div>
+                
+                <div class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Họ và tên</label>
+                        <input type="text" id="registerName" placeholder="Nhập họ và tên">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" placeholder="Nhập email của bạn">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPhone">Số điện thoại</label>
+                        <input type="tel" id="registerPhone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Mật khẩu</label>
+                        <input type="password" id="registerPassword" placeholder="Nhập mật khẩu">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+                        <input type="password" id="registerConfirmPassword" placeholder="Nhập lại mật khẩu">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="register()">ĐĂNG KÝ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== CART MODAL ====== -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Giỏ Hàng</h2>
+                <button class="modal-close" onclick="closeCartModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="checkout-steps">
+                    <div class="checkout-step active" id="stepCart">Giỏ Hàng</div>
+                    <div class="checkout-step" id="stepInfo">Thông Tin</div>
+                    <div class="checkout-step" id="stepConfirm">Xác Nhận</div>
+                </div>
+                
+                <div class="cart-content" id="cartContent">
+                    <div class="cart-items" id="cartItems">
+                        <!-- Cart items will be added here dynamically -->
+                    </div>
+                    
+                    <div class="cart-summary">
+                        <div class="cart-summary-row">
+                            <span>Tạm tính:</span>
+                            <span id="subtotal">0đ</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span>Phí vận chuyển:</span>
+                            <span id="shipping">0đ</span>
+                        </div>
+                        <div class="cart-summary-row total">
+                            <span>Tổng cộng:</span>
+                            <span id="total">0đ</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="width: 100%;" onclick="proceedToCheckout()">TIẾN HÀNH THANH TOÁN</button>
+                </div>
+                
+                <div class="checkout-form" id="checkoutInfo">
+                    <div class="form-group">
+                        <label for="checkoutName">Họ và tên *</label>
+                        <input type="text" id="checkoutName" placeholder="Nhập họ và tên">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutPhone">Số điện thoại *</label>
+                        <input type="tel" id="checkoutPhone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutEmail">Email</label>
+                        <input type="email" id="checkoutEmail" placeholder="Nhập email">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutAddress">Địa chỉ *</label>
+                        <input type="text" id="checkoutAddress" placeholder="Nhập địa chỉ nhận hàng">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkoutNote">Ghi chú</label>
+                        <input type="text" id="checkoutNote" placeholder="Ghi chú cho đơn hàng">
+                    </div>
+                    <div class="form-group">
+                        <label>Phương thức thanh toán</label>
+                        <div style="margin-top: 10px;">
+                            <label style="display: block; margin-bottom: 8px;">
+                                <input type="radio" name="payment" value="cod" checked> Thanh toán khi nhận hàng (COD)
+                            </label>
+                            <label style="display: block;">
+                                <input type="radio" name="payment" value="bank"> Chuyển khoản ngân hàng
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-outline" style="flex: 1;" onclick="backToCart()">QUAY LẠI</button>
+                        <button class="btn btn-primary" style="flex: 1;" onclick="placeOrder()">ĐẶT HÀNG</button>
+                    </div>
+                </div>
+                
+                <div class="checkout-form" id="checkoutConfirm">
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: var(--success); margin-bottom: 20px;"></i>
+                        <h3>Đặt Hàng Thành Công!</h3>
+                        <p>Mã đơn hàng: <strong>PB2024-001</strong></p>
+                        <p>Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="closeCartModal()">TIẾP TỤC MUA SẮM</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ====== GLOBAL VARIABLES ======
+        let cart = JSON.parse(localStorage.getItem('pandabeo_cart')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('pandabeo_user')) || null;
+        let currentCheckoutStep = 'cart';
+        
         // ====== FILTER SYSTEM ======
         let activeFilters = {
             size: ['all'],
@@ -1231,7 +1747,60 @@
             'zara': 'Zara'
         };
         
-        // Hàm chọn filter
+        // ====== INITIALIZATION ======
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo filter mặc định
+            document.querySelectorAll('[data-value="all"]').forEach(el => {
+                el.classList.add('active');
+            });
+            
+            // Hiển thị sản phẩm ban đầu
+            const initialProducts = getFilteredProducts();
+            displayProducts(initialProducts);
+            
+            // Cập nhật hiển thị filter
+            updateSelectedFiltersDisplay();
+            
+            // Cập nhật số lượng giỏ hàng
+            updateCartCount();
+            
+            // Hiển thị tên người dùng nếu đã đăng nhập
+            if (currentUser) {
+                updateUserInfo();
+            }
+            
+            // Smooth scroll cho navigation
+            setupSmoothScroll();
+        });
+        
+        // ====== NAVIGATION ======
+        function setupSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Cập nhật active class cho menu
+                        document.querySelectorAll('.nav-menu a').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        
+                        // Scroll to target
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // ====== FILTER FUNCTIONS ======
         function selectFilter(filterType, value) {
             const element = event.target;
             const isMultiple = element.classList.contains('multiple');
@@ -1268,7 +1837,6 @@
             updateSelectedFiltersDisplay();
         }
         
-        // Cập nhật hiển thị các filter đã chọn
         function updateSelectedFiltersDisplay() {
             const container = document.getElementById('selectedFilters');
             container.innerHTML = '';
@@ -1297,7 +1865,6 @@
             }
         }
         
-        // Xóa filter cụ thể
         function removeFilter(filterType, value) {
             event.stopPropagation();
             
@@ -1326,7 +1893,6 @@
             applyFilters();
         }
         
-        // Xóa tất cả filter
         function clearAllFilters() {
             // Xóa tất cả class active
             document.querySelectorAll('.filter-option.active, .color-option.active').forEach(el => {
@@ -1352,7 +1918,6 @@
             applyFilters();
         }
         
-        // Áp dụng filter
         function applyFilters() {
             console.log('Đang áp dụng filters:', activeFilters);
             
@@ -1373,9 +1938,8 @@
             }, 500);
         }
         
-        // Lấy sản phẩm đã filter (giả lập)
+        // ====== PRODUCT FUNCTIONS ======
         function getFilteredProducts() {
-            // Đây là danh sách sản phẩm giả lập
             const allProducts = [
                 {
                     id: 1,
@@ -1550,7 +2114,6 @@
             });
         }
         
-        // Hiển thị sản phẩm
         function displayProducts(products) {
             const productGrid = document.getElementById('productGrid');
             
@@ -1604,7 +2167,341 @@
             }).join('');
         }
         
-        // Hiển thị thông báo
+        // ====== CART FUNCTIONS ======
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+        
+        function addToCart(productId) {
+            event.stopPropagation();
+            
+            const product = getFilteredProducts().find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+            
+            // Lưu vào localStorage
+            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
+            
+            // Cập nhật UI
+            updateCartCount();
+            
+            // Hiển thị thông báo
+            showNotification('Đã thêm sản phẩm vào giỏ hàng!');
+            
+            // Nếu đang mở modal giỏ hàng, cập nhật nội dung
+            if (document.getElementById('cartModal').classList.contains('active')) {
+                renderCartItems();
+                updateCartSummary();
+            }
+        }
+        
+        function removeFromCart(productId) {
+            event.stopPropagation();
+            
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
+            
+            updateCartCount();
+            renderCartItems();
+            updateCartSummary();
+            showNotification('Đã xóa sản phẩm khỏi giỏ hàng');
+        }
+        
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity < 1) {
+                    item.quantity = 1;
+                }
+                localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
+                updateCartCount();
+                renderCartItems();
+                updateCartSummary();
+            }
+        }
+        
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <i class="fas fa-shopping-cart" style="font-size: 48px; color: var(--gray-light); margin-bottom: 20px;"></i>
+                        <h3>Giỏ hàng trống</h3>
+                        <p>Hãy thêm sản phẩm vào giỏ hàng</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toLocaleString()}đ</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <div class="cart-remove" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateCartSummary() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const shipping = subtotal > 500000 ? 0 : 30000;
+            const total = subtotal + shipping;
+            
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString() + 'đ';
+            document.getElementById('shipping').textContent = shipping === 0 ? 'Miễn phí' : shipping.toLocaleString() + 'đ';
+            document.getElementById('total').textContent = total.toLocaleString() + 'đ';
+        }
+        
+        // ====== AUTH FUNCTIONS ======
+        function openAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        function switchAuthTab(tab) {
+            // Cập nhật tabs
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.auth-tab[onclick*="login"]').classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelector('.auth-tab[onclick*="register"]').classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+        
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showNotification('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+            
+            // Giả lập đăng nhập thành công
+            currentUser = {
+                name: "Nguyễn Văn A",
+                email: email,
+                phone: "0941552919"
+            };
+            
+            localStorage.setItem('pandabeo_user', JSON.stringify(currentUser));
+            updateUserInfo();
+            closeAuthModal();
+            showNotification('Đăng nhập thành công!');
+        }
+        
+        function register() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                showNotification('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Mật khẩu xác nhận không khớp');
+                return;
+            }
+            
+            // Giả lập đăng ký thành công
+            currentUser = {
+                name: name,
+                email: email,
+                phone: phone
+            };
+            
+            localStorage.setItem('pandabeo_user', JSON.stringify(currentUser));
+            updateUserInfo();
+            
+            // Chuyển sang tab đăng nhập
+            switchAuthTab('login');
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            
+            showNotification('Đăng ký thành công! Vui lòng đăng nhập');
+        }
+        
+        function updateUserInfo() {
+            if (currentUser) {
+                const userIcon = document.querySelector('.header-icon[onclick="openAuthModal()"]');
+                userIcon.innerHTML = `<i class="fas fa-user-check"></i>`;
+                userIcon.setAttribute('title', `Xin chào, ${currentUser.name}`);
+            }
+        }
+        
+        // ====== CART MODAL FUNCTIONS ======
+        function openCartModal() {
+            document.getElementById('cartModal').classList.add('active');
+            renderCartItems();
+            updateCartSummary();
+            resetCheckoutSteps();
+        }
+        
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.remove('active');
+        }
+        
+        function resetCheckoutSteps() {
+            currentCheckoutStep = 'cart';
+            document.querySelectorAll('.checkout-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('stepCart').classList.add('active');
+            
+            document.querySelectorAll('.checkout-form').forEach(form => form.classList.remove('active'));
+            document.getElementById('cartContent').classList.remove('d-none');
+            document.getElementById('checkoutInfo').classList.remove('active');
+            document.getElementById('checkoutConfirm').classList.remove('active');
+        }
+        
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Giỏ hàng trống, vui lòng thêm sản phẩm');
+                return;
+            }
+            
+            currentCheckoutStep = 'info';
+            
+            // Cập nhật UI
+            document.querySelectorAll('.checkout-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('stepInfo').classList.add('active');
+            
+            document.getElementById('cartContent').classList.add('d-none');
+            document.getElementById('checkoutInfo').classList.add('active');
+            
+            // Điền thông tin người dùng nếu đã đăng nhập
+            if (currentUser) {
+                document.getElementById('checkoutName').value = currentUser.name || '';
+                document.getElementById('checkoutEmail').value = currentUser.email || '';
+                document.getElementById('checkoutPhone').value = currentUser.phone || '';
+            }
+        }
+        
+        function backToCart() {
+            currentCheckoutStep = 'cart';
+            
+            document.querySelectorAll('.checkout-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('stepCart').classList.add('active');
+            
+            document.getElementById('cartContent').classList.remove('d-none');
+            document.getElementById('checkoutInfo').classList.remove('active');
+        }
+        
+        function placeOrder() {
+            const name = document.getElementById('checkoutName').value;
+            const phone = document.getElementById('checkoutPhone').value;
+            const address = document.getElementById('checkoutAddress').value;
+            
+            if (!name || !phone || !address) {
+                showNotification('Vui lòng nhập đầy đủ thông tin bắt buộc (*)');
+                return;
+            }
+            
+            currentCheckoutStep = 'confirm';
+            
+            // Cập nhật UI
+            document.querySelectorAll('.checkout-step').forEach(step => step.classList.remove('active'));
+            document.getElementById('stepConfirm').classList.add('active');
+            
+            document.getElementById('checkoutInfo').classList.remove('active');
+            document.getElementById('checkoutConfirm').classList.add('active');
+            
+            // Xóa giỏ hàng
+            cart = [];
+            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        
+        // ====== OTHER FUNCTIONS ======
+        function openSearch() {
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Tìm kiếm sản phẩm...';
+            searchInput.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                padding: 0 20px;
+                font-size: 16px;
+                border: none;
+                border-bottom: 2px solid var(--primary);
+                z-index: 1001;
+                outline: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            `;
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+            `;
+            
+            overlay.onclick = function() {
+                document.body.removeChild(searchInput);
+                document.body.removeChild(overlay);
+            };
+            
+            document.body.appendChild(searchInput);
+            document.body.appendChild(overlay);
+            searchInput.focus();
+        }
+        
+        function addToWishlist(productId) {
+            event.stopPropagation();
+            showNotification('Đã thêm vào danh sách yêu thích!');
+        }
+        
+        function openQuickView(productId) {
+            event.stopPropagation();
+            showNotification('Đang mở xem nhanh sản phẩm...');
+        }
+        
         function showNotification(message) {
             // Tạo notification element
             const notification = document.createElement('div');
@@ -1665,88 +2562,6 @@
                     style.remove();
                 }, 300);
             }, 3000);
-        }
-        
-        // ====== INITIALIZATION ======
-        document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo filter mặc định
-            document.querySelectorAll('[data-value="all"]').forEach(el => {
-                el.classList.add('active');
-            });
-            
-            // Hiển thị sản phẩm ban đầu
-            const initialProducts = getFilteredProducts();
-            displayProducts(initialProducts);
-            
-            // Cập nhật hiển thị filter
-            updateSelectedFiltersDisplay();
-        });
-        
-        // ====== CÁC HÀM KHÁC ======
-        function openSearch() {
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = 'Tìm kiếm sản phẩm...';
-            searchInput.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                padding: 0 20px;
-                font-size: 16px;
-                border: none;
-                border-bottom: 2px solid var(--primary);
-                z-index: 1001;
-                outline: none;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            `;
-            
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-            `;
-            
-            overlay.onclick = function() {
-                document.body.removeChild(searchInput);
-                document.body.removeChild(overlay);
-            };
-            
-            document.body.appendChild(searchInput);
-            document.body.appendChild(overlay);
-            searchInput.focus();
-        }
-        
-        function openAuth(type) {
-            showNotification('Tính năng đăng nhập/đăng ký sẽ sớm có mặt!');
-        }
-        
-        function openCart() {
-            showNotification('Giỏ hàng của bạn có 3 sản phẩm!');
-        }
-        
-        function addToCart(productId) {
-            // Logic thêm vào giỏ hàng
-            console.log('Thêm vào giỏ hàng:', productId);
-            showNotification('Đã thêm sản phẩm vào giỏ hàng!');
-        }
-        
-        function addToWishlist(productId) {
-            // Logic thêm vào wishlist
-            console.log('Thêm vào wishlist:', productId);
-            showNotification('Đã thêm vào danh sách yêu thích!');
-        }
-        
-        function openQuickView(productId) {
-            // Logic xem nhanh
-            console.log('Xem nhanh sản phẩm:', productId);
-            showNotification('Đang mở xem nhanh sản phẩm...');
         }
     </script>
 </body>
