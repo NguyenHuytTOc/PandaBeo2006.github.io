@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PandaBeo - Thời Trang Cao Cấp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         /* Reset và biến CSS */
         * {
@@ -15,72 +16,114 @@
         
         :root {
             --primary: #ff4757;
-            --primary-dark: #ff3838;
+            --primary-dark: #e63946;
             --secondary: #2f3542;
-            --light: #f1f2f6;
+            --light: #f8f9fa;
             --dark: #2f3542;
             --gray: #747d8c;
+            --gray-light: #e9ecef;
             --success: #2ed573;
+            --warning: #ffa502;
             --radius: 8px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-hover: 0 8px 20px rgba(0,0,0,0.15);
             --transition: all 0.3s ease;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
             line-height: 1.6;
             color: var(--dark);
-            background-color: #f8f9fa;
+            background-color: #ffffff;
+            font-size: 14px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
         }
         
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
+        }
+        
+        /* Top Banner */
+        .top-banner {
+            background: var(--dark);
+            color: white;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+        
+        .top-banner .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .banner-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .banner-text i {
+            color: var(--primary);
         }
         
         /* Header */
         .header {
             background: white;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
         
-        .header-content {
+        .header-main {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
+            padding: 15px 0;
         }
         
         .logo {
-            font-size: 1.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
             font-weight: 700;
             color: var(--primary);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
         }
         
         .logo-icon {
-            font-size: 2rem;
+            font-size: 32px;
+        }
+        
+        .logo-sub {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 400;
+            margin-top: -5px;
         }
         
         .nav-menu {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 25px;
         }
         
         .nav-menu a {
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
-            padding: 0.5rem 0;
+            font-size: 14px;
+            padding: 5px 0;
             position: relative;
             transition: var(--transition);
         }
@@ -93,7 +136,7 @@
         .nav-menu a.active::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: -5px;
             left: 0;
             width: 100%;
             height: 2px;
@@ -102,7 +145,7 @@
         
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 15px;
             align-items: center;
         }
         
@@ -116,10 +159,11 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition);
+            color: var(--dark);
         }
         
         .header-icon:hover {
-            background: var(--light);
+            background: var(--gray-light);
             color: var(--primary);
         }
         
@@ -132,55 +176,58 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            font-size: 0.7rem;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
         }
         
-        /* Hero Section */
+        /* Hero Banner */
         .hero {
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
                         url('https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 6rem 0;
+            padding: 100px 0;
             text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 700px;
+            margin: 0 auto;
         }
         
         .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
         }
         
         .hero-content p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem;
+            font-size: 18px;
+            margin-bottom: 30px;
             color: rgba(255,255,255,0.9);
+            line-height: 1.6;
         }
         
         .sale-badge {
             display: inline-block;
             background: var(--primary);
             color: white;
-            padding: 0.5rem 1.5rem;
+            padding: 10px 30px;
             border-radius: 25px;
-            font-weight: bold;
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
         
         /* Buttons */
         .btn {
-            padding: 0.8rem 2rem;
+            padding: 12px 30px;
             border: none;
             border-radius: var(--radius);
             font-weight: 600;
@@ -189,8 +236,9 @@
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
             justify-content: center;
+            font-size: 14px;
         }
         
         .btn-primary {
@@ -201,7 +249,7 @@
         .btn-primary:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255, 71, 87, 0.3);
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.3);
         }
         
         .btn-outline {
@@ -215,32 +263,61 @@
             color: white;
         }
         
+        .btn-dark {
+            background: var(--dark);
+            color: white;
+        }
+        
+        .btn-dark:hover {
+            background: #1a1e27;
+        }
+        
         /* Sections */
         .section-title {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 40px;
         }
         
         .section-title h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 32px;
+            margin-bottom: 10px;
             color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
         }
         
         .section-title p {
             color: var(--gray);
-            font-size: 1.1rem;
+            font-size: 16px;
+            margin-top: 20px;
         }
         
         /* Filter Section */
+        .filters-section {
+            padding: 60px 0 30px;
+            background: var(--light);
+        }
+        
         .filter-option {
-            padding: 0.5rem 1rem;
+            padding: 8px 16px;
             background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
+            font-size: 13px;
             user-select: none;
         }
         
@@ -250,19 +327,19 @@
             color: white;
             border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255, 71, 87, 0.2);
+            box-shadow: var(--shadow);
         }
         
         .filter-option.multiple.active {
-            background: linear-gradient(135deg, var(--primary), #ff6b81);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         }
         
         .color-option {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px #e0e0e0;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px #dee2e6;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
@@ -282,93 +359,73 @@
             transform: translate(-50%, -50%);
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
-        .size-option {
-            width: 60px;
-            height: 60px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .size-option:hover,
-        .size-option.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-        
         .filter-group {
-            margin-bottom: 2rem;
+            margin-bottom: 25px;
         }
         
         .filter-title {
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 12px;
             color: var(--dark);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.1rem;
+            gap: 8px;
+            font-size: 14px;
         }
         
         .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 0.5rem;
+            gap: 8px;
+            margin-top: 5px;
         }
         
         .color-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 0.5rem;
+            gap: 8px;
+            margin-top: 5px;
         }
         
         .filter-section {
             background: white;
-            padding: 2rem;
+            padding: 25px;
             border-radius: var(--radius);
-            margin-bottom: 2rem;
+            margin-bottom: 25px;
             box-shadow: var(--shadow);
         }
         
         .selected-filters {
-            background: rgba(255, 71, 87, 0.1);
-            padding: 1rem;
+            background: rgba(255, 71, 87, 0.08);
+            padding: 15px;
             border-radius: var(--radius);
-            margin-bottom: 2rem;
+            margin-bottom: 25px;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            min-height: 50px;
+            gap: 8px;
+            min-height: 60px;
             align-items: center;
+            border: 1px solid rgba(255, 71, 87, 0.2);
         }
         
         .selected-filter {
             background: var(--primary);
             color: white;
-            padding: 0.3rem 0.8rem;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 12px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
         }
         
         .selected-filter .remove {
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 11px;
         }
         
         .selected-filter .remove:hover {
@@ -377,19 +434,21 @@
         
         .filter-actions {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-light);
         }
         
         /* Products */
         .products {
-            padding: 4rem 0;
+            padding: 60px 0;
         }
         
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
         }
         
         .product-card {
@@ -399,17 +458,18 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             cursor: pointer;
+            position: relative;
         }
         
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-hover);
         }
         
         .product-badges {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 12px;
+            left: 12px;
             z-index: 2;
             display: flex;
             flex-direction: column;
@@ -417,11 +477,12 @@
         }
         
         .badge {
-            padding: 0.3rem 0.8rem;
+            padding: 4px 10px;
             border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             color: white;
+            letter-spacing: 0.5px;
         }
         
         .badge-new {
@@ -433,12 +494,12 @@
         }
         
         .badge-hot {
-            background: #ff9f43;
+            background: var(--warning);
         }
         
         .product-image {
             position: relative;
-            height: 250px;
+            height: 300px;
             overflow: hidden;
         }
         
@@ -461,81 +522,342 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
+            font-size: 13px;
+            white-space: nowrap;
         }
         
         .product-card:hover .quick-view {
-            bottom: 20px;
+            bottom: 15px;
         }
         
         .product-info {
-            padding: 1.5rem;
+            padding: 20px;
         }
         
         .product-category {
             color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 12px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .product-name {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
+            font-size: 14px;
+            margin-bottom: 12px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            height: 40px;
+            line-height: 1.4;
         }
         
         .product-price {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 8px;
+            margin-bottom: 15px;
         }
         
         .current-price {
-            font-size: 1.3rem;
+            font-size: 16px;
             font-weight: 700;
             color: var(--primary);
         }
         
         .original-price {
-            font-size: 1rem;
+            font-size: 14px;
             color: var(--gray);
             text-decoration: line-through;
         }
         
         .product-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 8px;
         }
         
         .product-actions .btn {
-            padding: 0.5rem 1rem;
+            padding: 8px 12px;
             flex: 1;
+            font-size: 13px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .contact-info {
+            list-style: none;
+        }
+        
+        .contact-info li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info i {
+            color: var(--primary);
+            margin-top: 3px;
+            font-size: 16px;
+            width: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 8px 0;
+        }
+        
+        .social-link:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover .social-icon {
+            background: var(--primary);
+        }
+        
+        .shopee-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            color: var(--dark);
+            padding: 15px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+        
+        .shopee-link:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .shopee-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f53d2d, #ff6633);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .shopee-info h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .shopee-info p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+        }
+        
+        /* Categories Banner */
+        .categories {
+            padding: 40px 0;
+            background: var(--light);
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            padding: 25px 15px;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .category-icon {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .category-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            padding: 60px 0;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            text-align: center;
+        }
+        
+        .newsletter h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .newsletter p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .newsletter-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .nav-menu {
                 display: none;
             }
             
             .hero-content h1 {
-                font-size: 2rem;
+                font-size: 36px;
             }
             
             .section-title h2 {
-                font-size: 2rem;
+                font-size: 28px;
             }
             
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero-content h1 {
+                font-size: 28px;
+            }
+            
+            .hero-content p {
+                font-size: 16px;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .filter-actions {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+            
+            .header-main {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
             }
         }
         
@@ -543,16 +865,34 @@
         .mt-2 { margin-top: 2rem; }
         .mb-2 { margin-bottom: 2rem; }
         .text-center { text-align: center; }
+        .text-primary { color: var(--primary); }
     </style>
 </head>
 <body>
+    <!-- ====== TOP BANNER ====== -->
+    <div class="top-banner">
+        <div class="container">
+            <div class="banner-text">
+                <i class="fas fa-truck"></i>
+                <span>MIỄN PHÍ VẬN CHUYỂN ĐƠN HÀNG TRÊN 500K</span>
+            </div>
+            <div class="banner-text">
+                <i class="fas fa-phone"></i>
+                <span>Hotline: 0941552919</span>
+            </div>
+        </div>
+    </div>
+
     <!-- ====== HEADER ====== -->
     <header class="header">
         <div class="container">
-            <div class="header-content">
+            <div class="header-main">
                 <a href="#" class="logo">
                     <span class="logo-icon">🐼</span>
-                    <span>PandaBeo</span>
+                    <div>
+                        <div>PandaBeo</div>
+                        <div class="logo-sub">Thời trang cao cấp</div>
+                    </div>
                 </a>
                 
                 <nav>
@@ -588,10 +928,38 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Xu Hướng Thời Trang 2025</h1>
-                <p>Khám phá bộ sưu tập mới nhất với thiết kế độc đáo và chất lượng vượt trội. Thể hiện phong cách của bạn!</p>
+                <h1>BỘ SƯU TẬP MÙA HÈ 2024</h1>
+                <p>Khám phá những xu hướng thời trang mới nhất với chất lượng vượt trội và thiết kế độc đáo. Thể hiện phong cách của riêng bạn!</p>
                 <div class="sale-badge">SALE UP TO 70%</div>
-                <a href="#shop" class="btn btn-primary">Mua Sắm Ngay</a>
+                <a href="#shop" class="btn btn-primary">MUA SẮP NGAY</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CATEGORIES ====== -->
+    <section class="categories">
+        <div class="container">
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">👕</div>
+                    <h3>Thời Trang Nam</h3>
+                    <p>Áo sơ mi, quần âu, áo khoác</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">👚</div>
+                    <h3>Thời Trang Nữ</h3>
+                    <p>Đầm, váy, áo kiểu, chân váy</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">👶</div>
+                    <h3>Thời Trang Trẻ Em</h3>
+                    <p>Đồ bé trai, bé gái, sơ sinh</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">👜</div>
+                    <h3>Phụ Kiện</h3>
+                    <p>Túi xách, giày dép, mũ nón</p>
+                </div>
             </div>
         </div>
     </section>
@@ -601,7 +969,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Tìm Kiếm Theo Sở Thích</h2>
-                <p>Lọc sản phẩm theo các tiêu chí của bạn</p>
+                <p>Lọc sản phẩm theo các tiêu chí của bạn để tìm được sản phẩm ưng ý nhất</p>
             </div>
             
             <div class="selected-filters" id="selectedFilters">
@@ -714,7 +1082,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Sản Phẩm Bán Chạy</h2>
-                <p>Được khách hàng yêu thích nhất</p>
+                <p>Được khách hàng yêu thích nhất trong tuần qua</p>
             </div>
             
             <div class="products-grid" id="productGrid">
@@ -722,6 +1090,92 @@
             </div>
         </div>
     </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Đăng Ký Nhận Tin</h2>
+            <p>Nhận thông tin về khuyến mãi và sản phẩm mới nhất từ PandaBeo</p>
+            <div class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Nhập email của bạn">
+                <button class="btn btn-dark">ĐĂNG KÝ</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Thông Tin Liên Hệ</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Địa chỉ: Nghệ An, Việt Nam</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>Hotline: 0941552919</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>Email: huyquoc3509@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Mạng Xã Hội</h3>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/huy.mam.395/" class="social-link" target="_blank">
+                            <div class="social-icon">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <span>Facebook: /huy.mam.395</span>
+                        </a>
+                        <a href="https://www.instagram.com/huy.mam.395/" class="social-link" target="_blank">
+                            <div class="social-icon">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <span>Instagram: @huy.mam.395</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@mamhuydeptrai?lang=vi-VN" class="social-link" target="_blank">
+                            <div class="social-icon">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <span>TikTok: @mamhuydeptrai</span>
+                        </a>
+                        <a href="https://www.youtube.com/@PandaBeo2006" class="social-link" target="_blank">
+                            <div class="social-icon">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <span>YouTube: @PandaBeo2006</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Đồ Tui Hay Dùng</h3>
+                    <p style="margin-bottom: 15px; color: rgba(255,255,255,0.8);">Khám phá những sản phẩm yêu thích của tôi trên Shopee</p>
+                    <a href="https://collshp.com/9f5oi0ky9l" class="shopee-link" target="_blank">
+                        <div class="shopee-logo">
+                            <span>S</span>
+                        </div>
+                        <div class="shopee-info">
+                            <h4>Shopee Collection</h4>
+                            <p>collshp.com/9f5oi0ky9l</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 PandaBeo. Tất cả các quyền được bảo lưu.</p>
+                <p>Thiết kế bởi Huy Mam | Hotline hỗ trợ: 0941552919</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // ====== FILTER SYSTEM ======
@@ -904,7 +1358,7 @@
             
             // Hiển thị loading
             const productGrid = document.getElementById('productGrid');
-            productGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;">Đang tải sản phẩm...</div>';
+            productGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><div class="loading-spinner"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i><p style="margin-top: 1rem;">Đang tải sản phẩm...</p></div></div>';
             
             // Giả lập delay để thấy hiệu ứng
             setTimeout(() => {
@@ -1006,6 +1460,34 @@
                     style: ["body"],
                     brand: ["hm"],
                     tags: ["hot"]
+                },
+                {
+                    id: 7,
+                    name: "Áo Khoác Dù Nam Chống Nước",
+                    category: "Áo Khoác",
+                    price: 699000,
+                    originalPrice: 999000,
+                    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["M", "L", "XL"],
+                    color: ["#000000", "#a4b0be"],
+                    material: ["kaki"],
+                    style: ["regular"],
+                    brand: ["pandabeo"],
+                    tags: ["new"]
+                },
+                {
+                    id: 8,
+                    name: "Set Đồ Ngủ Nữ Cao Cấp",
+                    category: "Đồ Ngủ",
+                    price: 399000,
+                    originalPrice: 599000,
+                    image: "https://images.unsplash.com/photo-1585487000160-6eb9ce6b5aae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M"],
+                    color: ["#ff4757", "#ffffff"],
+                    material: ["cotton"],
+                    style: ["regular"],
+                    brand: ["pandabeo"],
+                    tags: ["sale"]
                 }
             ];
             
@@ -1132,9 +1614,9 @@
                 right: 20px;
                 background: var(--primary);
                 color: white;
-                padding: 1rem 1.5rem;
+                padding: 15px 20px;
                 border-radius: var(--radius);
-                box-shadow: var(--shadow);
+                box-shadow: var(--shadow-hover);
                 z-index: 9999;
                 display: flex;
                 align-items: center;
@@ -1161,6 +1643,16 @@
                         opacity: 1;
                     }
                 }
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
             `;
             document.head.appendChild(style);
             
@@ -1168,25 +1660,9 @@
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease forwards';
                 
-                const slideOutStyle = document.createElement('style');
-                slideOutStyle.textContent = `
-                    @keyframes slideOut {
-                        from {
-                            transform: translateX(0);
-                            opacity: 1;
-                        }
-                        to {
-                            transform: translateX(100%);
-                            opacity: 0;
-                        }
-                    }
-                `;
-                document.head.appendChild(slideOutStyle);
-                
                 setTimeout(() => {
                     notification.remove();
                     style.remove();
-                    slideOutStyle.remove();
                 }, 300);
             }, 3000);
         }
@@ -1208,33 +1684,69 @@
         
         // ====== CÁC HÀM KHÁC ======
         function openSearch() {
-            alert('Tính năng tìm kiếm sẽ sớm có mặt!');
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Tìm kiếm sản phẩm...';
+            searchInput.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 60px;
+                padding: 0 20px;
+                font-size: 16px;
+                border: none;
+                border-bottom: 2px solid var(--primary);
+                z-index: 1001;
+                outline: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            `;
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+            `;
+            
+            overlay.onclick = function() {
+                document.body.removeChild(searchInput);
+                document.body.removeChild(overlay);
+            };
+            
+            document.body.appendChild(searchInput);
+            document.body.appendChild(overlay);
+            searchInput.focus();
         }
         
         function openAuth(type) {
-            alert('Tính năng đăng nhập/đăng ký sẽ sớm có mặt!');
+            showNotification('Tính năng đăng nhập/đăng ký sẽ sớm có mặt!');
         }
         
         function openCart() {
-            alert('Giỏ hàng của bạn có 3 sản phẩm!');
+            showNotification('Giỏ hàng của bạn có 3 sản phẩm!');
         }
         
         function addToCart(productId) {
             // Logic thêm vào giỏ hàng
             console.log('Thêm vào giỏ hàng:', productId);
-            showNotification('Đã thêm sản phẩm vào giỏ hàng');
+            showNotification('Đã thêm sản phẩm vào giỏ hàng!');
         }
         
         function addToWishlist(productId) {
             // Logic thêm vào wishlist
             console.log('Thêm vào wishlist:', productId);
-            showNotification('Đã thêm vào danh sách yêu thích');
+            showNotification('Đã thêm vào danh sách yêu thích!');
         }
         
         function openQuickView(productId) {
             // Logic xem nhanh
             console.log('Xem nhanh sản phẩm:', productId);
-            showNotification('Đang mở xem nhanh sản phẩm');
+            showNotification('Đang mở xem nhanh sản phẩm...');
         }
     </script>
 </body>
