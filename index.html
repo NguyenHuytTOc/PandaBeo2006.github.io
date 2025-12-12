@@ -1,3887 +1,521 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PandaBeo - Multi-Brand Fashion Store</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        /* Reset và biến CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+// ====== PRODUCT DATA ======
+function getAllProducts() {
+    return [
+        // Sản phẩm Nam
+        {
+            id: 1,
+            name: "Áo Thun Dirty Coins Oversize Basic",
+            category: "nam",
+            price: 550000,
+            originalPrice: 650000,
+            images: [
+                "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+            ],
+            sizes: ["S", "M", "L", "XL", "XXL"],
+            colors: [
+                {name: "Đen", code: "#000000"},
+                {name: "Trắng", code: "#ffffff"}
+            ],
+            material: "cotton",
+            brand: "Dirty Coins",
+            tags: ["hot", "new"],
+            description: "Áo thun oversize basic từ Dirty Coins với chất liệu cotton 100% mềm mại, thoáng mát."
+        },
+        // Thêm các sản phẩm khác ở đây...
+    ];
+}
+
+// ====== INITIALIZATION ======
+document.addEventListener('DOMContentLoaded', function() {
+    // Khởi tạo filter mặc định
+    document.querySelectorAll('[data-value="all"]').forEach(el => {
+        el.classList.add('active');
+    });
+    
+    // Hiển thị trang chủ ban đầu
+    showPage('home');
+    
+    // Cập nhật số lượng giỏ hàng
+    updateCartCount();
+    
+    // Hiển thị tên người dùng nếu đã đăng nhập
+    if (currentUser) {
+        updateUserInfo();
+    }
+    
+    // Khởi tạo ngày tháng năm cho form đăng ký
+    initDateSelectors();
+    
+    // Load sản phẩm cho tất cả các trang
+    loadAllProducts();
+});
+
+// ====== LOAD ALL PRODUCTS ======
+function loadAllProducts() {
+    loadShopProducts();
+    loadNamProducts();
+    loadNuProducts();
+    loadTreEmProducts();
+    loadPhuKienProducts();
+}
+
+// ====== CART FUNCTIONS - SỬA LỖI LOCALSTORAGE ======
+function addToCart(productId) {
+    event.stopPropagation();
+    
+    const product = getAllProducts().find(p => p.id === productId);
+    if (!product) return;
+    
+    // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+    const existingItemIndex = cart.findIndex(item => item.id === productId);
+    
+    if (existingItemIndex > -1) {
+        // Nếu đã có, tăng số lượng
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        // Nếu chưa có, thêm mới
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0],
+            quantity: 1
+        });
+    }
+    
+    // Lưu vào localStorage với đúng key
+    localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
+    
+    // Cập nhật UI
+    updateCartCount();
+    
+    // Hiển thị thông báo
+    showNotification('Đã thêm sản phẩm vào giỏ hàng!');
+    
+    // Nếu đang mở modal giỏ hàng, cập nhật nội dung
+    if (document.getElementById('cartModal').classList.contains('active')) {
+        renderCartItems();
+        updateCartSummary();
+    }
+}
+
+// ====== RENDER CART ITEMS - SỬA LỖI EVENT ======
+function renderCartItems() {
+    const cartItemsContainer = document.getElementById('cartItems');
+    
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-shopping-cart" style="font-size: 48px; color: var(--gray-light); margin-bottom: 20px;"></i>
+                <h3>Giỏ hàng trống</h3>
+                <p>Hãy thêm sản phẩm vào giỏ hàng</p>
+            </div>
+        `;
+        return;
+    }
+    
+    cartItemsContainer.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="cart-item-info">
+                <div class="cart-item-name">${item.name}</div>
+                <div class="cart-item-price">${item.price.toLocaleString()}đ</div>
+            </div>
+            <div class="cart-item-actions">
+                <div class="quantity-control">
+                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                </div>
+                <div class="cart-remove" onclick="removeFromCart(${item.id})">
+                    <i class="fas fa-trash"></i>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ====== DISPLAY PRODUCTS - SỬA LỖI HIỂN THỊ ======
+function displayProducts(products, page = 'shop') {
+    const productGrid = document.getElementById(page + 'ProductGrid');
+    if (!productGrid) {
+        console.error('Product grid not found for page:', page);
+        return;
+    }
+    
+    if (!products || products.length === 0) {
+        productGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                <i class="fas fa-search" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
+                <h3>Không tìm thấy sản phẩm phù hợp</h3>
+                <p>Vui lòng thử lại với bộ lọc khác</p>
+            </div>
+        `;
+        return;
+    }
+    
+    productGrid.innerHTML = products.map(product => {
+        // Xử lý badges an toàn
+        let badges = '';
+        if (product.tags && product.tags.length > 0) {
+            badges = product.tags.map(tag => {
+                if (tag === 'new') return '<span class="badge badge-new">Mới</span>';
+                if (tag === 'sale' && product.originalPrice && product.originalPrice > product.price) {
+                    const discount = Math.round((1 - product.price/product.originalPrice) * 100);
+                    return `<span class="badge badge-sale">-${discount}%</span>`;
+                }
+                if (tag === 'hot') return '<span class="badge badge-hot">Hot</span>';
+                return '';
+            }).filter(badge => badge !== '').join('');
         }
         
-        :root {
-            --primary: #ff4757;
-            --primary-dark: #e63946;
-            --secondary: #2f3542;
-            --light: #f8f9fa;
-            --dark: #2f3542;
-            --gray: #747d8c;
-            --gray-light: #e9ecef;
-            --success: #2ed573;
-            --warning: #ffa502;
-            --radius: 8px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-hover: 0 8px 20px rgba(0,0,0,0.15);
-            --transition: all 0.3s ease;
-        }
+        const originalPrice = product.originalPrice && product.originalPrice > product.price ? 
+            `<span class="original-price">${product.originalPrice.toLocaleString()}đ</span>` : '';
         
-        body {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: #ffffff;
-            font-size: 14px;
-            overflow-x: hidden;
-        }
+        // Đảm bảo có ảnh
+        const productImage = product.images && product.images[0] ? product.images[0] : 
+            'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
         
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* Top Banner */
-        .top-banner {
-            background: var(--dark);
-            color: white;
-            padding: 8px 0;
-            font-size: 13px;
-        }
-        
-        .top-banner .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .banner-text {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .banner-text i {
-            color: var(--primary);
-        }
-        
-        /* Header */
-        .header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-main {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-        
-        .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo-icon {
-            font-size: 32px;
-        }
-        
-        .logo-sub {
-            font-size: 12px;
-            color: var(--gray);
-            font-weight: 400;
-            margin-top: -5px;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-        
-        .nav-menu a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            font-size: 14px;
-            padding: 5px 0;
-            position: relative;
-            transition: var(--transition);
-        }
-        
-        .nav-menu a:hover,
-        .nav-menu a.active {
-            color: var(--primary);
-        }
-        
-        .nav-menu a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-        
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .header-icon {
-            position: relative;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            color: var(--dark);
-        }
-        
-        .header-icon:hover {
-            background: var(--gray-light);
-            color: var(--primary);
-        }
-        
-        .cart-icon .cart-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--primary);
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-        
-        /* Hero Banner */
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                        url('https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-        }
-        
-        .hero-content {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .hero-content h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-        
-        .hero-content p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: rgba(255,255,255,0.9);
-            line-height: 1.6;
-        }
-        
-        .sale-badge {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.3);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-dark {
-            background: var(--dark);
-            color: white;
-        }
-        
-        .btn-dark:hover {
-            background: #1a1e27;
-        }
-        
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-        
-        /* Sections */
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .section-title h2 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: var(--dark);
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--primary);
-        }
-        
-        .section-title p {
-            color: var(--gray);
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-hover);
-            animation: modalFadeIn 0.3s ease;
-        }
-        
-        @keyframes modalFadeIn {
+        return `
+            <div class="product-card">
+                <div class="product-badges">
+                    ${badges}
+                </div>
+                <div class="product-image">
+                    <img src="${productImage}" alt="${product.name}" loading="lazy">
+                    <button class="quick-view" onclick="showProductDetail(${product.id})">Xem Nhanh</button>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${product.brand || 'Thương hiệu'}</div>
+                    <h3 class="product-name">${product.name}</h3>
+                    <div class="product-price">
+                        <span class="current-price">${product.price.toLocaleString()}đ</span>
+                        ${originalPrice}
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="addToCart(${product.id})">Thêm Vào Giỏ</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ====== LOAD PRODUCTS FOR EACH CATEGORY ======
+function loadShopProducts() {
+    const allProducts = getAllProducts();
+    displayProducts(allProducts, 'shop');
+}
+
+function loadNamProducts() {
+    const namProducts = getAllProducts().filter(p => p.category === 'nam');
+    displayProducts(namProducts, 'nam');
+}
+
+function loadNuProducts() {
+    const nuProducts = getAllProducts().filter(p => p.category === 'nu');
+    displayProducts(nuProducts, 'nu');
+}
+
+function loadTreEmProducts() {
+    const treEmProducts = getAllProducts().filter(p => p.category === 'tre-em');
+    displayProducts(treEmProducts, 'tre-em');
+}
+
+function loadPhuKienProducts() {
+    const phuKienProducts = getAllProducts().filter(p => p.category === 'phu-kien');
+    displayProducts(phuKienProducts, 'phu-kien');
+}
+
+// ====== CHECKOUT FUNCTIONS ======
+function renderCheckoutItems() {
+    const checkoutItemsContainer = document.getElementById('checkoutOrderItems');
+    
+    if (!checkoutItemsContainer) return;
+    
+    if (cart.length === 0) {
+        checkoutItemsContainer.innerHTML = '<p>Không có sản phẩm trong giỏ hàng</p>';
+        return;
+    }
+    
+    checkoutItemsContainer.innerHTML = cart.map(item => `
+        <div class="order-summary-item">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>${(item.price * item.quantity).toLocaleString()}đ</span>
+        </div>
+    `).join('');
+}
+
+// ====== AUTH FUNCTIONS - SỬA RECAPTCHA MESSAGE ======
+function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    if (!email || !password) {
+        showNotification('Vui lòng nhập đầy đủ thông tin');
+        return;
+    }
+    
+    // Giả lập đăng nhập thành công
+    currentUser = {
+        name: "Nguyễn Văn A",
+        email: email,
+        phone: "0941552919"
+    };
+    
+    localStorage.setItem('pandabeo_user', JSON.stringify(currentUser));
+    updateUserInfo();
+    closeAuthModal();
+    showNotification('Đăng nhập thành công!');
+}
+
+// ====== PAGE NAVIGATION - ĐẢM BẢO TẤT CẢ TRANG ĐƯỢC TẢI ======
+function showPage(page) {
+    // Ẩn tất cả các trang
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+    });
+    
+    // Cập nhật active menu
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Hiển thị trang được chọn
+    const pageElement = document.getElementById(page + '-page');
+    if (pageElement) {
+        pageElement.classList.add('active');
+    } else {
+        console.error('Page not found:', page);
+        return;
+    }
+    
+    // Cập nhật active menu
+    const activeLink = document.querySelector(`.nav-menu a[onclick*="${page}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+    
+    currentPage = page;
+    
+    // Load sản phẩm cho trang tương ứng
+    switch(page) {
+        case 'home':
+            // Trang chủ không có sản phẩm
+            break;
+        case 'shop':
+            loadShopProducts();
+            break;
+        case 'nam':
+            loadNamProducts();
+            break;
+        case 'nu':
+            loadNuProducts();
+            break;
+        case 'tre-em':
+            loadTreEmProducts();
+            break;
+        case 'phu-kien':
+            loadPhuKienProducts();
+            break;
+        case 'checkout':
+            renderCheckoutItems();
+            updateCheckoutSummary();
+            break;
+    }
+    
+    // Scroll lên đầu trang
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ====== FILTER FUNCTIONS - SỬA LỖI FILTER ======
+function applyFilters(page = 'shop') {
+    // Hiển thị loading
+    const productGrid = document.getElementById(page + 'ProductGrid');
+    if (productGrid) {
+        productGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><div class="loading-spinner"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i><p style="margin-top: 1rem;">Đang tải sản phẩm...</p></div></div>';
+    }
+    
+    // Filter sản phẩm dựa trên activeFilters
+    const filteredProducts = getFilteredProducts(page);
+    
+    // Cập nhật UI
+    displayProducts(filteredProducts, page);
+}
+
+// ====== PRODUCT DETAIL FUNCTIONS ======
+function showProductDetail(productId) {
+    const product = getAllProducts().find(p => p.id === productId);
+    if (!product) {
+        showNotification('Không tìm thấy sản phẩm');
+        return;
+    }
+    
+    // Hiển thị trang chi tiết sản phẩm
+    showPage('product-detail');
+    
+    // Render chi tiết sản phẩm
+    const detailContent = document.getElementById('productDetailContent');
+    if (!detailContent) {
+        console.error('Product detail content not found');
+        return;
+    }
+    
+    // Đảm bảo có ảnh
+    const mainImage = product.images && product.images[0] ? product.images[0] : 
+        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+    
+    detailContent.innerHTML = `
+        <div class="product-gallery">
+            <div class="main-image">
+                <img src="${mainImage}" alt="${product.name}" id="mainProductImage">
+            </div>
+            <div class="thumbnail-images">
+                ${product.images ? product.images.map((img, index) => `
+                    <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeProductImage('${img}')">
+                        <img src="${img}" alt="${product.name}">
+                    </div>
+                `).join('') : ''}
+            </div>
+        </div>
+        <div class="product-info-detail">
+            <h1 class="product-title">${product.name}</h1>
+            <div class="product-sku">SKU: PB${product.id}</div>
+            <div class="product-price-detail">${product.price.toLocaleString()}đ</div>
+            ${product.originalPrice && product.originalPrice > product.price ? 
+                `<div class="original-price-detail">${product.originalPrice.toLocaleString()}đ</div>` : ''}
+            
+            ${product.colors && product.colors.length > 0 ? `
+            <div class="color-options-detail">
+                <h4>Màu sắc: <span id="selectedColorName">${product.colors[0].name}</span></h4>
+                <div class="color-select">
+                    ${product.colors.map((color, index) => `
+                        <div class="color-circle ${index === 0 ? 'active' : ''}" 
+                             style="background-color: ${color.code};"
+                             onclick="selectColor('${color.name}', '${color.code}')"
+                             title="${color.name}"></div>
+                    `).join('')}
+                </div>
+            </div>` : ''}
+            
+            ${product.sizes && product.sizes.length > 0 ? `
+            <div class="size-options">
+                <h4>Kích cỡ:</h4>
+                <div class="size-select">
+                    ${product.sizes.map((size, index) => `
+                        <button class="size-btn ${index === 0 ? 'active' : ''}" onclick="selectSize('${size}')">${size}</button>
+                    `).join('')}
+                </div>
+            </div>` : ''}
+            
+            <div class="quantity-selector">
+                <h4>Số lượng:</h4>
+                <div class="quantity-control-detail">
+                    <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                    <input type="number" class="qty-input" value="1" id="productQuantity" min="1">
+                    <button class="qty-btn" onclick="changeQuantity(1)">+</button>
+                </div>
+            </div>
+            
+            <div class="product-actions-detail">
+                <button class="btn btn-primary" onclick="addToCartFromDetail(${product.id})">THÊM VÀO GIỎ HÀNG</button>
+                <button class="btn btn-outline" onclick="buyNow(${product.id})">MUA NGAY</button>
+            </div>
+            
+            <div class="product-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Thương hiệu:</span>
+                    <span>${product.brand || 'Không rõ'}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Chất liệu:</span>
+                    <span>${product.material || 'Không rõ'}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Xuất xứ:</span>
+                    <span>${product.origin || 'Việt Nam'}</span>
+                </div>
+            </div>
+            
+            <div class="product-description">
+                <h3>Mô tả sản phẩm</h3>
+                <p>${product.description || 'Đang cập nhật...'}</p>
+            </div>
+        </div>
+    `;
+}
+
+// ====== UPDATE CART COUNT ======
+function updateCartCount() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    document.getElementById('cartCount').textContent = count;
+}
+
+// ====== SHOW NOTIFICATION ======
+function showNotification(message) {
+    // Tạo notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 15px 20px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-hover);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(notification);
+    
+    // Tạo keyframe animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
             from {
+                transform: translateX(100%);
                 opacity: 0;
-                transform: translateY(-20px);
             }
             to {
+                transform: translateX(0);
                 opacity: 1;
-                transform: translateY(0);
             }
         }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-light);
-        }
-        
-        .modal-header h2 {
-            font-size: 24px;
-            color: var(--dark);
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-            transition: var(--transition);
-        }
-        
-        .modal-close:hover {
-            color: var(--primary);
-        }
-        
-        .modal-body {
-            padding: 20px;
-        }
-        
-        /* Auth Modal - Updated to match screenshot */
-        .auth-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--gray-light);
-            margin-bottom: 20px;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            background: none;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray);
-            cursor: pointer;
-            transition: var(--transition);
-            border-bottom: 3px solid transparent;
-        }
-        
-        .auth-tab.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
-        
-        .auth-form {
-            display: none;
-        }
-        
-        .auth-form.active {
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--gray-light);
-            border-radius: var(--radius);
-            font-size: 14px;
-            transition: var(--transition);
-        }
-        
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        
-        .radio-option input {
-            margin: 0;
-        }
-        
-        /* Cart Modal - Updated to match checkout screenshot */
-        .cart-items {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-        
-        .cart-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid var(--gray-light);
-            gap: 15px;
-        }
-        
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-        
-        .cart-item-image {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        
-        .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .cart-item-price {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .cart-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .quantity-btn {
-            width: 30px;
-            height: 30px;
-            border: 1px solid var(--gray-light);
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .quantity-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .quantity {
-            width: 40px;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .cart-remove {
-            color: var(--gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .cart-remove:hover {
-            color: var(--primary);
-        }
-        
-        .cart-summary {
-            padding: 20px;
-            background: var(--light);
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-        }
-        
-        .cart-summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        
-        .cart-summary-row.total {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid var(--gray-light);
-        }
-        
-        .checkout-form {
-            display: none;
-        }
-        
-        .checkout-form.active {
-            display: block;
-        }
-        
-        /* Checkout Steps - Updated to match screenshot */
-        .checkout-steps {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--gray-light);
-        }
-        
-        .checkout-step {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            font-weight: 500;
-            color: var(--gray);
-            position: relative;
-        }
-        
-        .checkout-step.active {
-            color: var(--primary);
-        }
-        
-        .checkout-step.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary);
-        }
-        
-        /* Filter Section */
-        .filters-section {
-            padding: 60px 0 30px;
-            background: var(--light);
-        }
-        
-        .filter-option {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 13px;
-            user-select: none;
-        }
-        
-        .filter-option:hover,
-        .filter-option.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-        
-        .filter-option.multiple.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        }
-        
-        .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 1px #dee2e6;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .color-option:hover,
-        .color-option.active {
-            box-shadow: 0 0 0 2px var(--primary);
-            transform: scale(1.1);
-        }
-        
-        .color-option.active::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        
-        .filter-group {
-            margin-bottom: 25px;
-        }
-        
-        .filter-title {
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
-        .filter-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 5px;
-        }
-        
-        .color-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 5px;
-        }
-        
-        .filter-section {
-            background: white;
-            padding: 25px;
-            border-radius: var(--radius);
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-        }
-        
-        .selected-filters {
-            background: rgba(255, 71, 87, 0.08);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            min-height: 60px;
-            align-items: center;
-            border: 1px solid rgba(255, 71, 87, 0.2);
-        }
-        
-        .selected-filter {
-            background: var(--primary);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .selected-filter .remove {
-            cursor: pointer;
-            font-size: 11px;
-        }
-        
-        .selected-filter .remove:hover {
-            color: #ffeaa7;
-        }
-        
-        .filter-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--gray-light);
-        }
-        
-        /* Products */
-        .products {
-            padding: 60px 0;
-        }
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-        }
-        
-        .product-card {
-            background: white;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .product-badges {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .badge {
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            color: white;
-            letter-spacing: 0.5px;
-        }
-        
-        .badge-new {
-            background: var(--success);
-        }
-        
-        .badge-sale {
-            background: var(--primary);
-        }
-        
-        .badge-hot {
-            background: var(--warning);
-        }
-        
-        .product-image {
-            position: relative;
-            height: 300px;
-            overflow: hidden;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-        
-        .quick-view {
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-        
-        .product-card:hover .quick-view {
-            bottom: 15px;
-        }
-        
-        .product-info {
-            padding: 20px;
-        }
-        
-        .product-category {
-            color: var(--gray);
-            font-size: 12px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .product-name {
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 40px;
-            line-height: 1.4;
-        }
-        
-        .product-price {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .current-price {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        
-        .original-price {
-            font-size: 14px;
-            color: var(--gray);
-            text-decoration: line-through;
-        }
-        
-        .product-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .product-actions .btn {
-            padding: 8px 12px;
-            flex: 1;
-            font-size: 13px;
-        }
-        
-        /* Product Detail Page */
-        .product-detail-section {
-            padding: 60px 0;
-        }
-        
-        .product-detail {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-        }
-        
-        .product-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .main-image {
-            width: 100%;
-            height: 500px;
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        
-        .main-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .thumbnail-images {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .thumbnail {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius);
-            overflow: hidden;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition);
-        }
-        
-        .thumbnail.active {
-            border-color: var(--primary);
-        }
-        
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .product-info-detail {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .product-title {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-        
-        .product-sku {
-            color: var(--gray);
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        .product-price-detail {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .original-price-detail {
-            font-size: 18px;
-            color: var(--gray);
-            text-decoration: line-through;
-            margin-bottom: 20px;
-        }
-        
-        .color-options-detail {
-            margin-bottom: 20px;
-        }
-        
-        .color-options-detail h4 {
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .color-select {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .color-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .color-circle.active {
-            border-color: var(--primary);
-        }
-        
-        .color-circle.active::after {
-            content: '✓';
-            color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        
-        .size-options {
-            margin-bottom: 20px;
-        }
-        
-        .size-options h4 {
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .size-select {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .size-btn {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--gray-light);
-            background: white;
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        
-        .size-btn:hover,
-        .size-btn.active {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        
-        .size-btn.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .quantity-selector h4 {
-            font-size: 16px;
-        }
-        
-        .quantity-control-detail {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--gray-light);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        
-        .qty-btn {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .qty-btn:hover {
-            background: var(--gray-light);
-        }
-        
-        .qty-input {
-            width: 60px;
-            height: 40px;
-            text-align: center;
-            border: none;
-            border-left: 1px solid var(--gray-light);
-            border-right: 1px solid var(--gray-light);
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .product-actions-detail {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .product-actions-detail .btn {
-            flex: 1;
-        }
-        
-        .product-meta {
-            border-top: 1px solid var(--gray-light);
-            padding-top: 20px;
-        }
-        
-        .meta-item {
-            margin-bottom: 10px;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .meta-label {
-            font-weight: 600;
-            min-width: 120px;
-        }
-        
-        .product-description {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--gray-light);
-        }
-        
-        .product-description h3 {
-            margin-bottom: 15px;
-        }
-        
-        /* Brands Showcase */
-        .brands-showcase {
-            padding: 40px 0;
-            background: var(--light);
-        }
-        
-        .brands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .brand-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .brand-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .brand-logo {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        
-        .brand-logo img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-        }
-        
-        /* Footer */
-        .footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 0 30px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-section h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: white;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .footer-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: var(--primary);
-        }
-        
-        .contact-info {
-            list-style: none;
-        }
-        
-        .contact-info li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-        
-        .contact-info i {
-            color: var(--primary);
-            margin-top: 3px;
-            font-size: 16px;
-            width: 20px;
-        }
-        
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: var(--transition);
-            padding: 8px 0;
-        }
-        
-        .social-link:hover {
-            color: var(--primary);
-            transform: translateX(5px);
-        }
-        
-        .social-icon {
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-        
-        .social-link:hover .social-icon {
-            background: var(--primary);
-        }
-        
-        .shopee-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            background: white;
-            color: var(--dark);
-            padding: 15px;
-            border-radius: var(--radius);
-            text-decoration: none;
-            transition: var(--transition);
-            margin-top: 10px;
-        }
-        
-        .shopee-link:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-        
-        .shopee-logo {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #f53d2d, #ff6633);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        .shopee-info h4 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        
-        .shopee-info p {
-            font-size: 12px;
-            color: var(--gray);
-        }
-        
-        .footer-bottom {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-        }
-        
-        /* Categories Banner */
-        .categories {
-            padding: 40px 0;
-            background: var(--light);
-        }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .category-card {
-            background: white;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            text-align: center;
-            padding: 25px 15px;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .category-icon {
-            font-size: 36px;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .category-card h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        /* Newsletter */
-        .newsletter {
-            padding: 60px 0;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            text-align: center;
-        }
-        
-        .newsletter h2 {
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-        
-        .newsletter p {
-            font-size: 16px;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .newsletter-form {
-            max-width: 500px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .newsletter-input {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: var(--radius);
-            font-size: 14px;
-        }
-        
-        /* Content Sections */
-        .content-section {
-            padding: 60px 0;
-            min-height: 400px;
-        }
-        
-        .content-section .container {
-            max-width: 800px;
-        }
-        
-        .content-section h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 32px;
-        }
-        
-        .content-section p {
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-        
-        /* Checkout Page Styles */
-        .checkout-page {
-            padding: 60px 0;
-        }
-        
-        .checkout-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-        
-        .checkout-section {
-            background: white;
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-        
-        .checkout-section h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .checkout-step {
-            margin-bottom: 30px;
-        }
-        
-        .checkout-step h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .checkout-step h3 .step-number {
-            width: 30px;
-            height: 30px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        
-        .address-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .coupon-code {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .coupon-code input {
-            flex: 1;
-        }
-        
-        .order-summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--gray-light);
-        }
-        
-        .order-summary-total {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            border-top: 2px solid var(--gray-light);
-            margin-top: 15px;
-        }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .nav-menu {
-                display: none;
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
             }
-            
-            .hero-content h1 {
-                font-size: 36px;
-            }
-            
-            .section-title h2 {
-                font-size: 28px;
-            }
-            
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-            
-            .brands-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-            
-            .product-detail {
-                grid-template-columns: 1fr;
-            }
-            
-            .checkout-container {
-                grid-template-columns: 1fr;
+            to {
+                transform: translateX(100%);
+                opacity: 0;
             }
         }
+    `;
+    document.head.appendChild(style);
+    
+    // Xóa sau 3 giây
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease forwards';
         
-        @media (max-width: 768px) {
-            .hero {
-                padding: 60px 0;
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
             }
-            
-            .hero-content h1 {
-                font-size: 28px;
+            if (style.parentNode) {
+                style.remove();
             }
-            
-            .hero-content p {
-                font-size: 16px;
-            }
-            
-            .newsletter-form {
-                flex-direction: column;
-            }
-            
-            .filter-actions {
-                flex-direction: column;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                max-width: 95%;
-            }
-            
-            .main-image {
-                height: 300px;
-            }
-            
-            .address-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-            
-            .product-image {
-                height: 200px;
-            }
-            
-            .header-main {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .cart-item {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .brands-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .product-actions-detail {
-                flex-direction: column;
-            }
-            
-            .size-select {
-                gap: 5px;
-            }
-            
-            .size-btn {
-                width: 40px;
-                height: 40px;
-            }
-        }
-        
-        /* Utility Classes */
-        .mt-2 { margin-top: 2rem; }
-        .mb-2 { margin-bottom: 2rem; }
-        .text-center { text-align: center; }
-        .text-primary { color: var(--primary); }
-        .d-none { display: none; }
-        .d-block { display: block; }
-    </style>
-</head>
-<body>
-    <!-- ====== TOP BANNER ====== -->
-    <div class="top-banner">
-        <div class="container">
-            <div class="banner-text">
-                <i class="fas fa-truck"></i>
-                <span>MIỄN PHÍ VẬN CHUYỂN ĐƠN HÀNG TRÊN 500K</span>
-            </div>
-            <div class="banner-text">
-                <i class="fas fa-phone"></i>
-                <span>Hotline: 0941552919</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ====== HEADER ====== -->
-    <header class="header">
-        <div class="container">
-            <div class="header-main">
-                <a href="#" class="logo">
-                    <span class="logo-icon">🐼</span>
-                    <div>
-                        <div>PandaBeo</div>
-                        <div class="logo-sub">Multi-Brand Fashion Store</div>
-                    </div>
-                </a>
-                
-                <nav>
-                    <ul class="nav-menu">
-                        <li><a href="#" class="active" onclick="showPage('home')">Trang Chủ</a></li>
-                        <li><a href="#" onclick="showPage('shop')">Cửa Hàng</a></li>
-                        <li><a href="#" onclick="showPage('nam')">Nam</a></li>
-                        <li><a href="#" onclick="showPage('nu')">Nữ</a></li>
-                        <li><a href="#" onclick="showPage('tre-em')">Trẻ Em</a></li>
-                        <li><a href="#" onclick="showPage('phu-kien')">Phụ Kiện</a></li>
-                        <li><a href="#" onclick="showPage('lookbook')">Lookbook</a></li>
-                        <li><a href="#" onclick="showPage('blog')">Blog</a></li>
-                        <li><a href="#" onclick="showPage('about')">Về Chúng Tôi</a></li>
-                    </ul>
-                </nav>
-                
-                <div class="header-actions">
-                    <div class="header-icon" onclick="openSearch()">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="header-icon" onclick="openAuthModal()">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="header-icon cart-icon" onclick="openCartModal()">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- ====== HOME PAGE ====== -->
-    <div id="home-page" class="page active">
-        <!-- ====== HERO BANNER ====== -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>BỘ SƯU TẬP MÙA HÈ 2025</h1>
-                    <p>Khám phá những xu hướng thời trang mới nhất từ các thương hiệu hàng đầu: Dirty Coins, SWE, SSSTUTTER, Levents, JBAGY và Canifa</p>
-                    <div class="sale-badge">SALE UP TO 70%</div>
-                    <a href="#" onclick="showPage('shop')" class="btn btn-primary">MUA SẮM NGAY</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ====== BRANDS SHOWCASE ====== -->
-        <section class="brands-showcase">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Các Thương Hiệu Nổi Bật</h2>
-                    <p>Khám phá các thương hiệu thời trang hàng đầu có tại PandaBeo</p>
-                </div>
-                <div class="brands-grid">
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #333;">DIRTY COINS</span>
-                        </div>
-                        <h4>Streetwear Premium</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 500K - 2.5M</p>
-                    </div>
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #333;">SWE</span>
-                        </div>
-                        <h4>Basic & Essentials</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 300K - 1.2M</p>
-                    </div>
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #333;">SSSTUTTER</span>
-                        </div>
-                        <h4>Urban Fashion</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 400K - 1.8M</p>
-                    </div>
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #333;">LEVENTS®</span>
-                        </div>
-                        <h4>Vietnamese Streetwear</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 450K - 2M</p>
-                    </div>
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #333;">JBAGY</span>
-                        </div>
-                        <h4>Minimalist Style</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 350K - 1.5M</p>
-                    </div>
-                    <div class="brand-card">
-                        <div class="brand-logo">
-                            <span style="font-size: 24px; font-weight: bold; color: #ff6b6b;">CANIFA</span>
-                        </div>
-                        <h4>Thời Trang Trẻ Em</h4>
-                        <p style="font-size: 12px; color: var(--gray);">Từ 150K - 800K</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ====== CATEGORIES ====== -->
-        <section class="categories">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Danh Mục Sản Phẩm</h2>
-                    <p>Lựa chọn theo nhu cầu của bạn</p>
-                </div>
-                <div class="categories-grid">
-                    <div class="category-card" onclick="showPage('nam')">
-                        <div class="category-icon">👕</div>
-                        <h3>Thời Trang Nam</h3>
-                        <p>Áo thun, áo sơ mi, quần âu, áo khoác</p>
-                    </div>
-                    <div class="category-card" onclick="showPage('nu')">
-                        <div class="category-icon">👚</div>
-                        <h3>Thời Trang Nữ</h3>
-                        <p>Đầm, váy, áo kiểu, chân váy, set đồ</p>
-                    </div>
-                    <div class="category-card" onclick="showPage('tre-em')">
-                        <div class="category-icon">👶</div>
-                        <h3>Trẻ Em & Canifa</h3>
-                        <p>Đồ bé trai, bé gái, sơ sinh, trẻ em</p>
-                    </div>
-                    <div class="category-card" onclick="showPage('phu-kien')">
-                        <div class="category-icon">👜</div>
-                        <h3>Phụ Kiện</h3>
-                        <p>Túi xách, giày dép, mũ nón, ví</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ====== NEWSLETTER ====== -->
-        <section class="newsletter">
-            <div class="container">
-                <h2>Đăng Ký Nhận Tin</h2>
-                <p>Nhận thông tin về khuyến mãi và sản phẩm mới nhất từ PandaBeo</p>
-                <div class="newsletter-form">
-                    <input type="email" class="newsletter-input" placeholder="Nhập email của bạn">
-                    <button class="btn btn-dark">ĐĂNG KÝ</button>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== SHOP PAGE ====== -->
-    <div id="shop-page" class="page">
-        <section class="filters-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Cửa Hàng</h2>
-                    <p>Tất cả sản phẩm tại PandaBeo</p>
-                </div>
-                
-                <div class="selected-filters" id="selectedFilters">
-                    <span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>
-                </div>
-                
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-ruler"></i>
-                            <span>Kích Cỡ</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="size" data-value="all" onclick="selectFilter('size', 'all')">Tất Cả</span>
-                            <span class="filter-option" data-filter="size" data-value="S" onclick="selectFilter('size', 'S')">S</span>
-                            <span class="filter-option" data-filter="size" data-value="M" onclick="selectFilter('size', 'M')">M</span>
-                            <span class="filter-option" data-filter="size" data-value="L" onclick="selectFilter('size', 'L')">L</span>
-                            <span class="filter-option" data-filter="size" data-value="XL" onclick="selectFilter('size', 'XL')">XL</span>
-                            <span class="filter-option" data-filter="size" data-value="XXL" onclick="selectFilter('size', 'XXL')">XXL</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-palette"></i>
-                            <span>Màu Sắc</span>
-                        </div>
-                        <div class="color-options">
-                            <div class="color-option" data-filter="color" data-value="#000000" data-name="Đen" onclick="selectFilter('color', '#000000')" style="background: #000;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffffff" data-name="Trắng" onclick="selectFilter('color', '#ffffff')" style="background: #fff; border: 1px solid #ccc;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ff4757" data-name="Đỏ" onclick="selectFilter('color', '#ff4757')" style="background: #ff4757;"></div>
-                            <div class="color-option" data-filter="color" data-value="#3742fa" data-name="Xanh" onclick="selectFilter('color', '#3742fa')" style="background: #3742fa;"></div>
-                            <div class="color-option" data-filter="color" data-value="#2ed573" data-name="Xanh lá" onclick="selectFilter('color', '#2ed573')" style="background: #2ed573;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffa502" data-name="Cam" onclick="selectFilter('color', '#ffa502')" style="background: #ffa502;"></div>
-                            <div class="color-option" data-filter="color" data-value="#a4b0be" data-name="Xám" onclick="selectFilter('color', '#a4b0be')" style="background: #a4b0be;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-tshirt"></i>
-                            <span>Chất Liệu</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option multiple" data-filter="material" data-value="cotton" onclick="selectFilter('material', 'cotton')">Cotton</span>
-                            <span class="filter-option multiple" data-filter="material" data-value="kaki" onclick="selectFilter('material', 'kaki')">Kaki</span>
-                            <span class="filter-option multiple" data-filter="material" data-value="jeans" onclick="selectFilter('material', 'jeans')">Jeans</span>
-                            <span class="filter-option multiple" data-filter="material" data-value="len" onclick="selectFilter('material', 'len')">Len</span>
-                            <span class="filter-option multiple" data-filter="material" data-value="lua" onclick="selectFilter('material', 'lua')">Lụa</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-tags"></i>
-                            <span>Giá</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="price" data-value="all" onclick="selectFilter('price', 'all')">Tất Cả</span>
-                            <span class="filter-option" data-filter="price" data-value="0-500" onclick="selectFilter('price', '0-500')">Dưới 500K</span>
-                            <span class="filter-option" data-filter="price" data-value="500-1000" onclick="selectFilter('price', '500-1000')">500K - 1M</span>
-                            <span class="filter-option" data-filter="price" data-value="1000-2000" onclick="selectFilter('price', '1000-2000')">1M - 2M</span>
-                            <span class="filter-option" data-filter="price" data-value="2000+" onclick="selectFilter('price', '2000+')">Trên 2M</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-copyright"></i>
-                            <span>Thương Hiệu</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option multiple" data-filter="brand" data-value="dirtycoins" onclick="selectFilter('brand', 'dirtycoins')">Dirty Coins</span>
-                            <span class="filter-option multiple" data-filter="brand" data-value="swe" onclick="selectFilter('brand', 'swe')">SWE</span>
-                            <span class="filter-option multiple" data-filter="brand" data-value="ssstutter" onclick="selectFilter('brand', 'ssstutter')">SSSTUTTER</span>
-                            <span class="filter-option multiple" data-filter="brand" data-value="levents" onclick="selectFilter('brand', 'levents')">Levents</span>
-                            <span class="filter-option multiple" data-filter="brand" data-value="jbagy" onclick="selectFilter('brand', 'jbagy')">JBAGY</span>
-                            <span class="filter-option multiple" data-filter="brand" data-value="canifa" onclick="selectFilter('brand', 'canifa')">Canifa</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-actions">
-                        <button class="btn btn-primary" onclick="applyFilters()">
-                            <i class="fas fa-filter"></i> Áp Dụng Lọc
-                        </button>
-                        <button class="btn btn-outline" onclick="clearAllFilters()">
-                            <i class="fas fa-times"></i> Xóa Tất Cả
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="products">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Tất Cả Sản Phẩm</h2>
-                    <p>Khám phá tất cả sản phẩm tại PandaBeo</p>
-                </div>
-                
-                <div class="products-grid" id="shopProductGrid">
-                    <!-- Sản phẩm sẽ được thêm động bằng JavaScript -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== NAM PAGE ====== -->
-    <div id="nam-page" class="page">
-        <section class="filters-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Thời Trang Nam</h2>
-                    <p>Khám phá các sản phẩm thời trang nam mới nhất</p>
-                </div>
-                
-                <div class="selected-filters" id="namSelectedFilters">
-                    <span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>
-                </div>
-                
-                <div class="filter-section">
-                    <!-- Các filter tương tự như shop page -->
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-ruler"></i>
-                            <span>Kích Cỡ</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="size" data-value="all" onclick="selectFilter('size', 'all', 'nam')">Tất Cả</span>
-                            <span class="filter-option" data-filter="size" data-value="S" onclick="selectFilter('size', 'S', 'nam')">S</span>
-                            <span class="filter-option" data-filter="size" data-value="M" onclick="selectFilter('size', 'M', 'nam')">M</span>
-                            <span class="filter-option" data-filter="size" data-value="L" onclick="selectFilter('size', 'L', 'nam')">L</span>
-                            <span class="filter-option" data-filter="size" data-value="XL" onclick="selectFilter('size', 'XL', 'nam')">XL</span>
-                            <span class="filter-option" data-filter="size" data-value="XXL" onclick="selectFilter('size', 'XXL', 'nam')">XXL</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-palette"></i>
-                            <span>Màu Sắc</span>
-                        </div>
-                        <div class="color-options">
-                            <div class="color-option" data-filter="color" data-value="#000000" data-name="Đen" onclick="selectFilter('color', '#000000', 'nam')" style="background: #000;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffffff" data-name="Trắng" onclick="selectFilter('color', '#ffffff', 'nam')" style="background: #fff; border: 1px solid #ccc;"></div>
-                            <div class="color-option" data-filter="color" data-value="#3742fa" data-name="Xanh" onclick="selectFilter('color', '#3742fa', 'nam')" style="background: #3742fa;"></div>
-                            <div class="color-option" data-filter="color" data-value="#a4b0be" data-name="Xám" onclick="selectFilter('color', '#a4b0be', 'nam')" style="background: #a4b0be;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-tags"></i>
-                            <span>Giá</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="price" data-value="all" onclick="selectFilter('price', 'all', 'nam')">Tất Cả</span>
-                            <span class="filter-option" data-filter="price" data-value="0-500" onclick="selectFilter('price', '0-500', 'nam')">Dưới 500K</span>
-                            <span class="filter-option" data-filter="price" data-value="500-1000" onclick="selectFilter('price', '500-1000', 'nam')">500K - 1M</span>
-                            <span class="filter-option" data-filter="price" data-value="1000-2000" onclick="selectFilter('price', '1000-2000', 'nam')">1M - 2M</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-actions">
-                        <button class="btn btn-primary" onclick="applyFilters('nam')">
-                            <i class="fas fa-filter"></i> Áp Dụng Lọc
-                        </button>
-                        <button class="btn btn-outline" onclick="clearAllFilters('nam')">
-                            <i class="fas fa-times"></i> Xóa Tất Cả
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="products">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Sản Phẩm Nam</h2>
-                    <p>Được khách hàng yêu thích nhất</p>
-                </div>
-                
-                <div class="products-grid" id="namProductGrid">
-                    <!-- Sản phẩm nam sẽ được thêm động bằng JavaScript -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== NU PAGE ====== -->
-    <div id="nu-page" class="page">
-        <section class="filters-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Thời Trang Nữ</h2>
-                    <p>Khám phá các sản phẩm thời trang nữ mới nhất</p>
-                </div>
-                
-                <div class="selected-filters" id="nuSelectedFilters">
-                    <span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>
-                </div>
-                
-                <div class="filter-section">
-                    <!-- Các filter tương tự -->
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-ruler"></i>
-                            <span>Kích Cỡ</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="size" data-value="all" onclick="selectFilter('size', 'all', 'nu')">Tất Cả</span>
-                            <span class="filter-option" data-filter="size" data-value="S" onclick="selectFilter('size', 'S', 'nu')">S</span>
-                            <span class="filter-option" data-filter="size" data-value="M" onclick="selectFilter('size', 'M', 'nu')">M</span>
-                            <span class="filter-option" data-filter="size" data-value="L" onclick="selectFilter('size', 'L', 'nu')">L</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-palette"></i>
-                            <span>Màu Sắc</span>
-                        </div>
-                        <div class="color-options">
-                            <div class="color-option" data-filter="color" data-value="#ff4757" data-name="Đỏ" onclick="selectFilter('color', '#ff4757', 'nu')" style="background: #ff4757;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffffff" data-name="Trắng" onclick="selectFilter('color', '#ffffff', 'nu')" style="background: #fff; border: 1px solid #ccc;"></div>
-                            <div class="color-option" data-filter="color" data-value="#000000" data-name="Đen" onclick="selectFilter('color', '#000000', 'nu')" style="background: #000;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffa502" data-name="Cam" onclick="selectFilter('color', '#ffa502', 'nu')" style="background: #ffa502;"></div>
-                            <div class="color-option" data-filter="color" data-value="#2ed573" data-name="Xanh lá" onclick="selectFilter('color', '#2ed573', 'nu')" style="background: #2ed573;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-actions">
-                        <button class="btn btn-primary" onclick="applyFilters('nu')">
-                            <i class="fas fa-filter"></i> Áp Dụng Lọc
-                        </button>
-                        <button class="btn btn-outline" onclick="clearAllFilters('nu')">
-                            <i class="fas fa-times"></i> Xóa Tất Cả
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="products">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Sản Phẩm Nữ</h2>
-                    <p>Được khách hàng yêu thích nhất</p>
-                </div>
-                
-                <div class="products-grid" id="nuProductGrid">
-                    <!-- Sản phẩm nữ sẽ được thêm động bằng JavaScript -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== TRE-EM PAGE ====== -->
-    <div id="tre-em-page" class="page">
-        <section class="filters-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Thời Trang Trẻ Em</h2>
-                    <p>Khám phá các sản phẩm thời trang trẻ em mới nhất</p>
-                </div>
-                
-                <div class="selected-filters" id="treEmSelectedFilters">
-                    <span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>
-                </div>
-                
-                <div class="filter-section">
-                    <!-- Các filter tương tự -->
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-ruler"></i>
-                            <span>Kích Cỡ</span>
-                        </div>
-                        <div class="filter-options">
-                            <span class="filter-option active" data-filter="size" data-value="all" onclick="selectFilter('size', 'all', 'tre-em')">Tất Cả</span>
-                            <span class="filter-option" data-filter="size" data-value="104" onclick="selectFilter('size', '104', 'tre-em')">104</span>
-                            <span class="filter-option" data-filter="size" data-value="110" onclick="selectFilter('size', '110', 'tre-em')">110</span>
-                            <span class="filter-option" data-filter="size" data-value="116" onclick="selectFilter('size', '116', 'tre-em')">116</span>
-                            <span class="filter-option" data-filter="size" data-value="122" onclick="selectFilter('size', '122', 'tre-em')">122</span>
-                            <span class="filter-option" data-filter="size" data-value="128" onclick="selectFilter('size', '128', 'tre-em')">128</span>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <div class="filter-title">
-                            <i class="fas fa-palette"></i>
-                            <span>Màu Sắc</span>
-                        </div>
-                        <div class="color-options">
-                            <div class="color-option" data-filter="color" data-value="#ffffff" data-name="Trắng" onclick="selectFilter('color', '#ffffff', 'tre-em')" style="background: #fff; border: 1px solid #ccc;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ff4757" data-name="Đỏ" onclick="selectFilter('color', '#ff4757', 'tre-em')" style="background: #ff4757;"></div>
-                            <div class="color-option" data-filter="color" data-value="#3742fa" data-name="Xanh" onclick="selectFilter('color', '#3742fa', 'tre-em')" style="background: #3742fa;"></div>
-                            <div class="color-option" data-filter="color" data-value="#2ed573" data-name="Xanh lá" onclick="selectFilter('color', '#2ed573', 'tre-em')" style="background: #2ed573;"></div>
-                            <div class="color-option" data-filter="color" data-value="#ffa502" data-name="Cam" onclick="selectFilter('color', '#ffa502', 'tre-em')" style="background: #ffa502;"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-actions">
-                        <button class="btn btn-primary" onclick="applyFilters('tre-em')">
-                            <i class="fas fa-filter"></i> Áp Dụng Lọc
-                        </button>
-                        <button class="btn btn-outline" onclick="clearAllFilters('tre-em')">
-                            <i class="fas fa-times"></i> Xóa Tất Cả
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="products">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Sản Phẩm Trẻ Em</h2>
-                    <p>Được các bé yêu thích nhất</p>
-                </div>
-                
-                <div class="products-grid" id="treEmProductGrid">
-                    <!-- Sản phẩm trẻ em sẽ được thêm động bằng JavaScript -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== PHU-KIEN PAGE ====== -->
-    <div id="phu-kien-page" class="page">
-        <section class="products">
-            <div class="container">
-                <div class="section-title">
-                    <h2>Phụ Kiện</h2>
-                    <p>Hoàn thiện phong cách của bạn với các phụ kiện thời trang</p>
-                </div>
-                
-                <div class="products-grid" id="phuKienProductGrid">
-                    <!-- Sản phẩm phụ kiện sẽ được thêm động bằng JavaScript -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== LOOKBOOK PAGE ====== -->
-    <div id="lookbook-page" class="page">
-        <section class="content-section">
-            <div class="container">
-                <h2>Lookbook</h2>
-                <p>Khám phá các phong cách mix & match từ PandaBeo. Chúng tôi mang đến cho bạn những ý tưởng phối đồ độc đáo từ các thương hiệu thời trang hàng đầu.</p>
-                <p>Dirty Coins, SWE, SSSTUTTER, Levents, JBAGY và Canifa - mỗi thương hiệu đều có nét riêng biệt, và khi kết hợp chúng lại, bạn sẽ tạo ra những phong cách hoàn toàn mới lạ.</p>
-                <div class="text-center mt-2">
-                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Lookbook" style="width: 100%; max-width: 800px; border-radius: var(--radius);">
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== BLOG PAGE ====== -->
-    <div id="blog-page" class="page">
-        <section class="content-section">
-            <div class="container">
-                <h2>Blog Thời Trang</h2>
-                <p>Cập nhật những xu hướng thời trang mới nhất, những mẹo phối đồ độc đáo và những câu chuyện đằng sau các thương hiệu thời trang yêu thích của bạn.</p>
-                <p>Tại PandaBeo, chúng tôi không chỉ bán quần áo - chúng tôi mang đến cho bạn một phong cách sống, một câu chuyện và một cộng đồng những người yêu thời trang.</p>
-                <div class="text-center mt-2">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Blog" style="width: 100%; max-width: 800px; border-radius: var(--radius);">
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== ABOUT PAGE ====== -->
-    <div id="about-page" class="page">
-        <section class="content-section">
-            <div class="container">
-                <h2>Về Chúng Tôi</h2>
-                <p>PandaBeo được thành lập với sứ mệnh mang đến cho khách hàng Việt Nam những sản phẩm thời trang chất lượng từ các thương hiệu hàng đầu trong và ngoài nước.</p>
-                <p>Với hơn 5 năm kinh nghiệm trong ngành thời trang, chúng tôi tự hào là địa chỉ tin cậy cho những ai yêu thích streetwear và thời trang hiện đại. Từ Dirty Coins, Levents đến SWE và Canifa - chúng tôi lựa chọn kỹ lưỡng từng sản phẩm để đảm bảo chất lượng và tính thời trang.</p>
-                <p>Đội ngũ của chúng tôi bao gồm những người trẻ đam mê thời trang, luôn tìm kiếm và cập nhật những xu hướng mới nhất để mang đến cho khách hàng những trải nghiệm mua sắm tuyệt vời nhất.</p>
-                <div class="text-center mt-2">
-                    <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="About Us" style="width: 100%; max-width: 800px; border-radius: var(--radius);">
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== PRODUCT DETAIL PAGE ====== -->
-    <div id="product-detail-page" class="page">
-        <section class="product-detail-section">
-            <div class="container">
-                <div class="product-detail" id="productDetailContent">
-                    <!-- Nội dung chi tiết sản phẩm sẽ được thêm động -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== CHECKOUT PAGE ====== -->
-    <div id="checkout-page" class="page">
-        <section class="checkout-page">
-            <div class="container">
-                <div class="checkout-container">
-                    <div class="checkout-left">
-                        <div class="checkout-section">
-                            <h2>Thông Tin Giao Hàng</h2>
-                            <div class="checkout-step">
-                                <h3><span class="step-number">1</span> Thông Tin Liên Hệ</h3>
-                                <div class="form-group">
-                                    <input type="text" id="checkoutFullName" placeholder="Họ và tên">
-                                </div>
-                                <div class="form-group">
-                                    <input type="tel" id="checkoutPhone" placeholder="Số điện thoại nhận hàng">
-                                </div>
-                            </div>
-                            
-                            <div class="checkout-step">
-                                <h3><span class="step-number">2</span> Địa Chỉ Giao Hàng</h3>
-                                <div class="address-grid">
-                                    <div class="form-group">
-                                        <select id="checkoutProvince">
-                                            <option value="">Tỉnh / Thành phố</option>
-                                            <option value="hanoi">Hà Nội</option>
-                                            <option value="hcm">TP. Hồ Chí Minh</option>
-                                            <option value="danang">Đà Nẵng</option>
-                                            <option value="hue">Huế</option>
-                                            <option value="nghean">Nghệ An</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <select id="checkoutDistrict">
-                                            <option value="">Quận / Huyện</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <select id="checkoutWard">
-                                            <option value="">Phường / Xã</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="checkoutAddress" placeholder="Địa chỉ chi tiết">
-                                </div>
-                            </div>
-                            
-                            <div class="checkout-step">
-                                <h3><span class="step-number">3</span> Phương Thức Vận Chuyển</h3>
-                                <div class="form-group">
-                                    <p style="color: var(--gray);">Cập nhật thông tin giao hàng để xem chi phí và thời gian giao hàng.</p>
-                                </div>
-                            </div>
-                            
-                            <div class="checkout-step">
-                                <h3><span class="step-number">4</span> Phương Thức Thanh Toán</h3>
-                                <div class="form-group">
-                                    <div style="margin-top: 10px;">
-                                        <label style="display: block; margin-bottom: 8px;">
-                                            <input type="radio" name="payment" value="cod" checked> Thanh toán khi nhận hàng (COD)
-                                        </label>
-                                        <label style="display: block;">
-                                            <input type="radio" name="payment" value="bank"> Chuyển khoản ngân hàng
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checkout-right">
-                        <div class="checkout-section">
-                            <h2>Đơn Hàng Của Bạn</h2>
-                            <div id="checkoutOrderItems">
-                                <!-- Sản phẩm trong đơn hàng sẽ được thêm động -->
-                            </div>
-                            
-                            <div class="coupon-code">
-                                <input type="text" id="couponCode" placeholder="Mã ưu đãi">
-                                <button class="btn btn-outline" onclick="applyCoupon()">Áp dụng</button>
-                            </div>
-                            
-                            <div class="order-summary">
-                                <div class="order-summary-item">
-                                    <span>Giá trị đơn hàng</span>
-                                    <span id="orderSubtotal">0 đ</span>
-                                </div>
-                                <div class="order-summary-item">
-                                    <span>Giảm giá trực tiếp</span>
-                                    <span id="orderDiscount">-0 đ</span>
-                                </div>
-                                <div class="order-summary-item">
-                                    <span>Voucher giảm thêm 12% tối đa 250K</span>
-                                    <span id="orderVoucher">-0 đ</span>
-                                </div>
-                                <div class="order-summary-item">
-                                    <span>Phí vận chuyển</span>
-                                    <span id="orderShipping">0 đ</span>
-                                </div>
-                                <div class="order-summary-total">
-                                    <span>Tổng tiền thanh toán</span>
-                                    <span id="orderTotal">0 đ</span>
-                                </div>
-                                <p style="font-size: 12px; color: var(--gray); margin-top: 10px;">(Đã bao gồm thuế VAT)</p>
-                            </div>
-                            
-                            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="completeOrder()">THANH TOÁN</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- ====== FOOTER ====== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Thông Tin Liên Hệ</h3>
-                    <ul class="contact-info">
-                        <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Địa chỉ: Nghệ An, Việt Nam</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span>Hotline: 0941552919</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>Email: huyquoc3509@gmail.com</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Mạng Xã Hội</h3>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/huy.mam.395/" class="social-link" target="_blank">
-                            <div class="social-icon">
-                                <i class="fab fa-facebook-f"></i>
-                            </div>
-                            <span>Facebook: /huy.mam.395</span>
-                        </a>
-                        <a href="https://www.instagram.com/huy.mam.395/" class="social-link" target="_blank">
-                            <div class="social-icon">
-                                <i class="fab fa-instagram"></i>
-                            </div>
-                            <span>Instagram: @huy.mam.395</span>
-                        </a>
-                        <a href="https://www.tiktok.com/@mamhuydeptrai?lang=vi-VN" class="social-link" target="_blank">
-                            <div class="social-icon">
-                                <i class="fab fa-tiktok"></i>
-                            </div>
-                            <span>TikTok: @mamhuydeptrai</span>
-                        </a>
-                        <a href="https://www.youtube.com/@PandaBeo2006" class="social-link" target="_blank">
-                            <div class="social-icon">
-                                <i class="fab fa-youtube"></i>
-                            </div>
-                            <span>YouTube: @PandaBeo2006</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Đồ Tui Hay Dùng</h3>
-                    <p style="margin-bottom: 15px; color: rgba(255,255,255,0.8);">Khám phá những sản phẩm yêu thích của tôi trên Shopee</p>
-                    <a href="https://collshp.com/9f5oi0ky9l" class="shopee-link" target="_blank">
-                        <div class="shopee-logo">
-                            <span>S</span>
-                        </div>
-                        <div class="shopee-info">
-                            <h4>Shopee Collection</h4>
-                            <p>collshp.com/9f5oi0ky9l</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>© 2024 PandaBeo. Tất cả các quyền được bảo lưu.</p>
-                <p>Thiết kế bởi Huy Mam | Hotline hỗ trợ: 0941552919</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ====== AUTH MODAL ====== -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Đăng Nhập / Đăng Ký</h2>
-                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="auth-tabs">
-                    <button class="auth-tab active" onclick="switchAuthTab('login')">Đăng Nhập</button>
-                    <button class="auth-tab" onclick="switchAuthTab('register')">Đăng Ký</button>
-                </div>
-                
-                <div class="auth-form active" id="loginForm">
-                    <h3 style="margin-bottom: 20px; text-align: center; color: var(--dark);">ĐĂNG NHẬP TÀI KHOẢN</h3>
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" placeholder="Nhập email của bạn">
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Mật khẩu</label>
-                        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu">
-                    </div>
-                    <p style="font-size: 12px; color: var(--gray); margin-bottom: 20px;">
-                        This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
-                    </p>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="login()">ĐĂNG NHẬP</button>
-                    <div style="margin-top: 20px; text-align: center;">
-                        <p>Khách hàng mới? <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color: var(--primary); font-weight: 500;">Tạo tài khoản</a></p>
-                        <p>Quên mật khẩu? <a href="javascript:void(0)" style="color: var(--primary); font-weight: 500;">Khôi phục mật khẩu</a></p>
-                    </div>
-                </div>
-                
-                <div class="auth-form" id="registerForm">
-                    <h3 style="margin-bottom: 20px; text-align: center; color: var(--dark);">Tạo tài khoản</h3>
-                    <div class="form-group">
-                        <input type="text" id="registerName" placeholder="Họ và tên">
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="registerEmail" placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" id="registerPassword" placeholder="Mật khẩu">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <select id="registerDay">
-                                <option value="">Ngày</option>
-                                <!-- Options sẽ được thêm bằng JS -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select id="registerMonth">
-                                <option value="">Tháng</option>
-                                <!-- Options sẽ được thêm bằng JS -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select id="registerYear">
-                                <option value="">Năm</option>
-                                <!-- Options sẽ được thêm bằng JS -->
-                            </select>
-                        </div>
-                    </div>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="male" name="gender" value="male">
-                            <label for="male">Nam</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="female" name="gender" value="female">
-                            <label for="female">Nữ</label>
-                        </div>
-                    </div>
-                    <p style="font-size: 12px; color: var(--gray); margin-bottom: 20px;">
-                        This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
-                    </p>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="register()">ĐĂNG KÝ</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ====== CART MODAL ====== -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Giỏ Hàng</h2>
-                <button class="modal-close" onclick="closeCartModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="cartContent">
-                    <div class="cart-items" id="cartItems">
-                        <!-- Cart items sẽ được thêm động -->
-                    </div>
-                    
-                    <div class="cart-summary">
-                        <div class="cart-summary-row">
-                            <span>Tạm tính:</span>
-                            <span id="subtotal">0đ</span>
-                        </div>
-                        <div class="cart-summary-row">
-                            <span>Phí vận chuyển:</span>
-                            <span id="shipping">0đ</span>
-                        </div>
-                        <div class="cart-summary-row total">
-                            <span>Tổng cộng:</span>
-                            <span id="total">0đ</span>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" style="width: 100%;" onclick="goToCheckout()">THANH TOÁN</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ====== GLOBAL VARIABLES ======
-        let cart = JSON.parse(localStorage.getItem('pandabeo_cart')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('pandabeo_user')) || null;
-        let currentPage = 'home';
-        
-        // ====== FILTER SYSTEM ======
-        let activeFilters = {
-            size: ['all'],
-            color: [],
-            material: [],
-            price: ['all'],
-            brand: []
-        };
-        
-        const filterDisplayNames = {
-            size: 'Kích Cỡ',
-            color: 'Màu Sắc',
-            material: 'Chất Liệu',
-            price: 'Giá',
-            brand: 'Thương Hiệu'
-        };
-        
-        const valueDisplayNames = {
-            'all': 'Tất Cả',
-            'S': 'S', 'M': 'M', 'L': 'L', 'XL': 'XL', 'XXL': 'XXL',
-            '104': '104', '110': '110', '116': '116', '122': '122', '128': '128',
-            '#000000': 'Đen', '#ffffff': 'Trắng', '#ff4757': 'Đỏ', '#3742fa': 'Xanh',
-            '#2ed573': 'Xanh lá', '#ffa502': 'Cam', '#a4b0be': 'Xám',
-            'cotton': 'Cotton', 'kaki': 'Kaki', 'jeans': 'Jeans', 'len': 'Len', 'lua': 'Lụa',
-            '0-500': 'Dưới 500K', '500-1000': '500K-1M', '1000-2000': '1M-2M', '2000+': 'Trên 2M',
-            'dirtycoins': 'Dirty Coins', 'swe': 'SWE', 'ssstutter': 'SSSTUTTER',
-            'levents': 'Levents', 'jbagy': 'JBAGY', 'canifa': 'Canifa'
-        };
-        
-        // ====== INITIALIZATION ======
-        document.addEventListener('DOMContentLoaded', function() {
-            // Khởi tạo filter mặc định
-            document.querySelectorAll('[data-value="all"]').forEach(el => {
-                el.classList.add('active');
-            });
-            
-            // Hiển thị trang chủ ban đầu
-            showPage('home');
-            
-            // Cập nhật số lượng giỏ hàng
-            updateCartCount();
-            
-            // Hiển thị tên người dùng nếu đã đăng nhập
-            if (currentUser) {
-                updateUserInfo();
-            }
-            
-            // Khởi tạo ngày tháng năm cho form đăng ký
-            initDateSelectors();
-            
-            // Load sản phẩm cho trang chủ
-            loadHomeProducts();
-        });
-        
-        // ====== PAGE NAVIGATION ======
-        function showPage(page) {
-            // Ẩn tất cả các trang
-            document.querySelectorAll('.page').forEach(p => {
-                p.classList.remove('active');
-            });
-            
-            // Cập nhật active menu
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Hiển thị trang được chọn
-            document.getElementById(page + '-page').classList.add('active');
-            
-            // Cập nhật active menu
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                if (link.textContent.trim() === getPageTitle(page)) {
-                    link.classList.add('active');
-                }
-            });
-            
-            currentPage = page;
-            
-            // Load sản phẩm cho trang tương ứng
-            switch(page) {
-                case 'home':
-                    loadHomeProducts();
-                    break;
-                case 'shop':
-                    loadShopProducts();
-                    break;
-                case 'nam':
-                    loadNamProducts();
-                    break;
-                case 'nu':
-                    loadNuProducts();
-                    break;
-                case 'tre-em':
-                    loadTreEmProducts();
-                    break;
-                case 'phu-kien':
-                    loadPhuKienProducts();
-                    break;
-            }
-            
-            // Scroll lên đầu trang
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        function getPageTitle(page) {
-            const titles = {
-                'home': 'Trang Chủ',
-                'shop': 'Cửa Hàng',
-                'nam': 'Nam',
-                'nu': 'Nữ',
-                'tre-em': 'Trẻ Em',
-                'phu-kien': 'Phụ Kiện',
-                'lookbook': 'Lookbook',
-                'blog': 'Blog',
-                'about': 'Về Chúng Tôi'
-            };
-            return titles[page] || page;
-        }
-        
-        // ====== FILTER FUNCTIONS ======
-        function selectFilter(filterType, value, page = 'shop') {
-            const element = event.target;
-            const isMultiple = element.classList.contains('multiple');
-            
-            // Nếu là filter đơn (chỉ chọn 1)
-            if (!isMultiple) {
-                // Xóa tất cả filter cùng loại
-                const containerId = page === 'shop' ? 'selectedFilters' : page + 'SelectedFilters';
-                document.querySelectorAll(`#${page}-page [data-filter="${filterType}"]`).forEach(el => {
-                    el.classList.remove('active');
-                });
-                
-                // Xóa tất cả giá trị trong filterType
-                activeFilters[filterType] = [];
-                
-                // Thêm giá trị mới
-                activeFilters[filterType].push(value);
-                element.classList.add('active');
-            } else {
-                // Nếu là filter đa chọn
-                if (element.classList.contains('active')) {
-                    // Bỏ chọn
-                    element.classList.remove('active');
-                    const index = activeFilters[filterType].indexOf(value);
-                    if (index > -1) {
-                        activeFilters[filterType].splice(index, 1);
-                    }
-                } else {
-                    // Chọn
-                    element.classList.add('active');
-                    activeFilters[filterType].push(value);
-                }
-            }
-            
-            updateSelectedFiltersDisplay(page);
-        }
-        
-        function updateSelectedFiltersDisplay(page = 'shop') {
-            const containerId = page === 'shop' ? 'selectedFilters' : page + 'SelectedFilters';
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            let hasFilters = false;
-            
-            for (const [filterType, values] of Object.entries(activeFilters)) {
-                if (values.length > 0 && !values.includes('all')) {
-                    values.forEach(value => {
-                        hasFilters = true;
-                        const filterElement = document.createElement('div');
-                        filterElement.className = 'selected-filter';
-                        filterElement.innerHTML = `
-                            ${filterDisplayNames[filterType]}: ${valueDisplayNames[value] || value}
-                            <span class="remove" onclick="removeFilter('${filterType}', '${value}', '${page}')">
-                                <i class="fas fa-times"></i>
-                            </span>
-                        `;
-                        container.appendChild(filterElement);
-                    });
-                }
-            }
-            
-            if (!hasFilters) {
-                container.innerHTML = '<span style="color: var(--gray);">Chưa có bộ lọc nào được chọn</span>';
-            }
-        }
-        
-        function removeFilter(filterType, value, page = 'shop') {
-            event.stopPropagation();
-            
-            // Xóa khỏi mảng activeFilters
-            const index = activeFilters[filterType].indexOf(value);
-            if (index > -1) {
-                activeFilters[filterType].splice(index, 1);
-            }
-            
-            // Xóa class active trên UI
-            const element = document.querySelector(`#${page}-page [data-filter="${filterType}"][data-value="${value}"]`);
-            if (element) {
-                element.classList.remove('active');
-            }
-            
-            // Nếu filterType rỗng, chọn "Tất cả" (nếu có)
-            if (activeFilters[filterType].length === 0) {
-                const allElement = document.querySelector(`#${page}-page [data-filter="${filterType}"][data-value="all"]`);
-                if (allElement) {
-                    allElement.classList.add('active');
-                    activeFilters[filterType].push('all');
-                }
-            }
-            
-            updateSelectedFiltersDisplay(page);
-            applyFilters(page);
-        }
-        
-        function clearAllFilters(page = 'shop') {
-            // Xóa tất cả class active
-            document.querySelectorAll(`#${page}-page .filter-option.active, #${page}-page .color-option.active`).forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Reset activeFilters
-            activeFilters = {
-                size: ['all'],
-                color: [],
-                material: [],
-                price: ['all'],
-                brand: []
-            };
-            
-            // Chọn "Tất cả" cho các filter có option "all"
-            document.querySelectorAll(`#${page}-page [data-value="all"]`).forEach(el => {
-                el.classList.add('active');
-            });
-            
-            updateSelectedFiltersDisplay(page);
-            applyFilters(page);
-        }
-        
-        function applyFilters(page = 'shop') {
-            // Hiển thị loading
-            const productGrid = document.getElementById(page + 'ProductGrid');
-            if (productGrid) {
-                productGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><div class="loading-spinner"><i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i><p style="margin-top: 1rem;">Đang tải sản phẩm...</p></div></div>';
-            }
-            
-            // Giả lập delay để thấy hiệu ứng
-            setTimeout(() => {
-                // Filter sản phẩm dựa trên activeFilters
-                const filteredProducts = getFilteredProducts(page);
-                
-                // Cập nhật UI
-                displayProducts(filteredProducts, page);
-            }, 500);
-        }
-        
-        // ====== PRODUCT FUNCTIONS ======
-        function getFilteredProducts(page = 'shop') {
-            const allProducts = getAllProducts();
-            
-            // Lọc theo danh mục trang
-            let categoryFiltered = allProducts;
-            if (page === 'nam') {
-                categoryFiltered = allProducts.filter(p => p.category === 'nam');
-            } else if (page === 'nu') {
-                categoryFiltered = allProducts.filter(p => p.category === 'nu');
-            } else if (page === 'tre-em') {
-                categoryFiltered = allProducts.filter(p => p.category === 'tre-em');
-            } else if (page === 'phu-kien') {
-                categoryFiltered = allProducts.filter(p => p.category === 'phu-kien');
-            }
-            
-            // Filter sản phẩm
-            return categoryFiltered.filter(product => {
-                // Check size filter - bỏ qua nếu là 'all'
-                if (activeFilters.size.length > 0 && !activeFilters.size.includes('all')) {
-                    const hasSize = activeFilters.size.some(size => product.sizes.includes(size));
-                    if (!hasSize) return false;
-                }
-                
-                // Check color filter
-                if (activeFilters.color.length > 0) {
-                    const hasColor = activeFilters.color.some(color => product.colors.includes(color));
-                    if (!hasColor) return false;
-                }
-                
-                // Check material filter
-                if (activeFilters.material.length > 0) {
-                    const hasMaterial = activeFilters.material.some(material => product.material === material);
-                    if (!hasMaterial) return false;
-                }
-                
-                // Check price filter - bỏ qua nếu là 'all'
-                if (activeFilters.price.length > 0 && !activeFilters.price.includes('all')) {
-                    const priceFilter = activeFilters.price[0]; // Giả sử chỉ chọn 1 khoảng giá
-                    const price = product.price / 1000; // Chuyển sang K
-                    
-                    let priceMatch = false;
-                    switch(priceFilter) {
-                        case '0-500':
-                            priceMatch = price < 500;
-                            break;
-                        case '500-1000':
-                            priceMatch = price >= 500 && price < 1000;
-                            break;
-                        case '1000-2000':
-                            priceMatch = price >= 1000 && price < 2000;
-                            break;
-                        case '2000+':
-                            priceMatch = price >= 2000;
-                            break;
-                    }
-                    if (!priceMatch) return false;
-                }
-                
-                // Check brand filter
-                if (activeFilters.brand.length > 0) {
-                    const hasBrand = activeFilters.brand.some(brand => product.brand === brand);
-                    if (!hasBrand) return false;
-                }
-                
-                return true;
-            });
-        }
-        
-        function displayProducts(products, page = 'shop') {
-            const productGrid = document.getElementById(page + 'ProductGrid');
-            if (!productGrid) return;
-            
-            if (products.length === 0) {
-                productGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-                        <i class="fas fa-search" style="font-size: 3rem; color: var(--gray); margin-bottom: 1rem;"></i>
-                        <h3>Không tìm thấy sản phẩm phù hợp</h3>
-                        <p>Vui lòng thử lại với bộ lọc khác</p>
-                        <button class="btn btn-outline" onclick="clearAllFilters('${page}')" style="margin-top: 1rem;">
-                            <i class="fas fa-times"></i> Xóa Tất Cả Filter
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            productGrid.innerHTML = products.map(product => {
-                const badges = product.tags ? product.tags.map(tag => {
-                    if (tag === 'new') return '<span class="badge badge-new">Mới</span>';
-                    if (tag === 'sale') return '<span class="badge badge-sale">-' + Math.round((1 - product.price/product.originalPrice) * 100) + '%</span>';
-                    if (tag === 'hot') return '<span class="badge badge-hot">Hot</span>';
-                    return '';
-                }).join('') : '';
-                
-                const originalPrice = product.originalPrice ? `<span class="original-price">${product.originalPrice.toLocaleString()}đ</span>` : '';
-                
-                return `
-                    <div class="product-card" onclick="showProductDetail(${product.id})">
-                        <div class="product-badges">
-                            ${badges}
-                        </div>
-                        <div class="product-image">
-                            <img src="${product.images[0]}" alt="${product.name}">
-                            <button class="quick-view" onclick="showProductDetail(${product.id}); event.stopPropagation();">Xem Nhanh</button>
-                        </div>
-                        <div class="product-info">
-                            <div class="product-category">${product.brand}</div>
-                            <h3 class="product-name">${product.name}</h3>
-                            <div class="product-price">
-                                <span class="current-price">${product.price.toLocaleString()}đ</span>
-                                ${originalPrice}
-                            </div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary" onclick="addToCart(${product.id}); event.stopPropagation();">Thêm Vào Giỏ</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        function loadHomeProducts() {
-            const allProducts = getAllProducts();
-            const bestSellers = allProducts.slice(0, 8); // Lấy 8 sản phẩm đầu tiên làm best sellers
-            
-            // Hiển thị ở trang chủ nếu có section products
-            const homeProductGrid = document.getElementById('homeProductGrid');
-            if (homeProductGrid) {
-                displayProducts(bestSellers, 'home');
-            }
-        }
-        
-        function loadShopProducts() {
-            const allProducts = getAllProducts();
-            displayProducts(allProducts, 'shop');
-        }
-        
-        function loadNamProducts() {
-            const namProducts = getAllProducts().filter(p => p.category === 'nam');
-            displayProducts(namProducts, 'nam');
-        }
-        
-        function loadNuProducts() {
-            const nuProducts = getAllProducts().filter(p => p.category === 'nu');
-            displayProducts(nuProducts, 'nu');
-        }
-        
-        function loadTreEmProducts() {
-            const treEmProducts = getAllProducts().filter(p => p.category === 'tre-em');
-            displayProducts(treEmProducts, 'tre-em');
-        }
-        
-        function loadPhuKienProducts() {
-            const phuKienProducts = getAllProducts().filter(p => p.category === 'phu-kien');
-            displayProducts(phuKienProducts, 'phu-kien');
-        }
-        
-        function showProductDetail(productId) {
-            const product = getAllProducts().find(p => p.id === productId);
-            if (!product) return;
-            
-            // Hiển thị trang chi tiết sản phẩm
-            showPage('product-detail');
-            
-            // Render chi tiết sản phẩm
-            const detailContent = document.getElementById('productDetailContent');
-            detailContent.innerHTML = `
-                <div class="product-gallery">
-                    <div class="main-image">
-                        <img src="${product.images[0]}" alt="${product.name}" id="mainProductImage">
-                    </div>
-                    <div class="thumbnail-images">
-                        ${product.images.map((img, index) => `
-                            <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeProductImage('${img}')">
-                                <img src="${img}" alt="${product.name}">
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-                <div class="product-info-detail">
-                    <h1 class="product-title">${product.name}</h1>
-                    <div class="product-sku">SKU: ${product.sku || 'PB' + product.id}</div>
-                    <div class="product-price-detail">${product.price.toLocaleString()}đ</div>
-                    ${product.originalPrice ? `<div class="original-price-detail">${product.originalPrice.toLocaleString()}đ</div>` : ''}
-                    
-                    <div class="color-options-detail">
-                        <h4>Màu sắc: <span id="selectedColorName">${product.colors[0].name}</span></h4>
-                        <div class="color-select">
-                            ${product.colors.map((color, index) => `
-                                <div class="color-circle ${index === 0 ? 'active' : ''}" 
-                                     style="background-color: ${color.code};"
-                                     onclick="selectColor('${color.name}', '${color.code}')"
-                                     title="${color.name}"></div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="size-options">
-                        <h4>Kích cỡ:</h4>
-                        <div class="size-select">
-                            ${product.sizes.map((size, index) => `
-                                <button class="size-btn ${index === 0 ? 'active' : ''}" onclick="selectSize('${size}')">${size}</button>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="quantity-selector">
-                        <h4>Số lượng:</h4>
-                        <div class="quantity-control-detail">
-                            <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
-                            <input type="text" class="qty-input" value="1" id="productQuantity">
-                            <button class="qty-btn" onclick="changeQuantity(1)">+</button>
-                        </div>
-                    </div>
-                    
-                    <div class="product-actions-detail">
-                        <button class="btn btn-primary" onclick="addToCartFromDetail(${product.id})">THÊM VÀO GIỎ HÀNG</button>
-                        <button class="btn btn-outline" onclick="buyNow(${product.id})">MUA NGAY</button>
-                    </div>
-                    
-                    <div class="product-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Thương hiệu:</span>
-                            <span>${product.brand}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Chất liệu:</span>
-                            <span>${product.material}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Xuất xứ:</span>
-                            <span>${product.origin || 'Việt Nam'}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="product-description">
-                        <h3>Mô tả sản phẩm</h3>
-                        <p>${product.description}</p>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function changeProductImage(imgSrc) {
-            document.getElementById('mainProductImage').src = imgSrc;
-            document.querySelectorAll('.thumbnail').forEach(thumb => {
-                thumb.classList.remove('active');
-            });
-            event.target.closest('.thumbnail').classList.add('active');
-        }
-        
-        function selectColor(colorName, colorCode) {
-            document.getElementById('selectedColorName').textContent = colorName;
-            document.querySelectorAll('.color-circle').forEach(circle => {
-                circle.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-        
-        function selectSize(size) {
-            document.querySelectorAll('.size-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-        
-        function changeQuantity(change) {
-            const input = document.getElementById('productQuantity');
-            let value = parseInt(input.value) + change;
-            if (value < 1) value = 1;
-            input.value = value;
-        }
-        
-        // ====== CART FUNCTIONS ======
-        function updateCartCount() {
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cartCount').textContent = count;
-        }
-        
-        function addToCart(productId) {
-            event.stopPropagation();
-            
-            const product = getAllProducts().find(p => p.id === productId);
-            if (!product) return;
-            
-            const existingItem = cart.find(item => item.id === productId);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images[0],
-                    quantity: 1
-                });
-            }
-            
-            // Lưu vào localStorage
-            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
-            
-            // Cập nhật UI
-            updateCartCount();
-            
-            // Hiển thị thông báo
-            showNotification('Đã thêm sản phẩm vào giỏ hàng!');
-            
-            // Nếu đang mở modal giỏ hàng, cập nhật nội dung
-            if (document.getElementById('cartModal').classList.contains('active')) {
-                renderCartItems();
-                updateCartSummary();
-            }
-        }
-        
-        function addToCartFromDetail(productId) {
-            const quantity = parseInt(document.getElementById('productQuantity').value);
-            const product = getAllProducts().find(p => p.id === productId);
-            
-            if (!product) return;
-            
-            const existingItem = cart.find(item => item.id === productId);
-            
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images[0],
-                    quantity: quantity
-                });
-            }
-            
-            // Lưu vào localStorage
-            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
-            
-            // Cập nhật UI
-            updateCartCount();
-            
-            // Hiển thị thông báo
-            showNotification(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`);
-        }
-        
-        function buyNow(productId) {
-            addToCartFromDetail(productId);
-            goToCheckout();
-        }
-        
-        function removeFromCart(productId) {
-            event.stopPropagation();
-            
-            cart = cart.filter(item => item.id !== productId);
-            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
-            
-            updateCartCount();
-            renderCartItems();
-            updateCartSummary();
-            showNotification('Đã xóa sản phẩm khỏi giỏ hàng');
-        }
-        
-        function updateQuantity(productId, change) {
-            const item = cart.find(item => item.id === productId);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity < 1) {
-                    item.quantity = 1;
-                }
-                localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
-                updateCartCount();
-                renderCartItems();
-                updateCartSummary();
-            }
-        }
-        
-        function renderCartItems() {
-            const cartItemsContainer = document.getElementById('cartItems');
-            
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <i class="fas fa-shopping-cart" style="font-size: 48px; color: var(--gray-light); margin-bottom: 20px;"></i>
-                        <h3>Giỏ hàng trống</h3>
-                        <p>Hãy thêm sản phẩm vào giỏ hàng</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            cartItemsContainer.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-image">
-                        <img src="${item.image}" alt="${item.name}">
-                    </div>
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">${item.price.toLocaleString()}đ</div>
-                    </div>
-                    <div class="cart-item-actions">
-                        <div class="quantity-control">
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                            <span class="quantity">${item.quantity}</span>
-                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        </div>
-                        <div class="cart-remove" onclick="removeFromCart(${item.id})">
-                            <i class="fas fa-trash"></i>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function updateCartSummary() {
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const shipping = subtotal > 500000 ? 0 : 30000;
-            const total = subtotal + shipping;
-            
-            document.getElementById('subtotal').textContent = subtotal.toLocaleString() + 'đ';
-            document.getElementById('shipping').textContent = shipping === 0 ? 'Miễn phí' : shipping.toLocaleString() + 'đ';
-            document.getElementById('total').textContent = total.toLocaleString() + 'đ';
-        }
-        
-        function goToCheckout() {
-            // Đóng modal giỏ hàng
-            closeCartModal();
-            
-            // Hiển thị trang thanh toán
-            showPage('checkout');
-            
-            // Render sản phẩm trong đơn hàng
-            renderCheckoutItems();
-            
-            // Tính toán tổng tiền
-            updateCheckoutSummary();
-        }
-        
-        function renderCheckoutItems() {
-            const checkoutItemsContainer = document.getElementById('checkoutOrderItems');
-            
-            if (cart.length === 0) {
-                checkoutItemsContainer.innerHTML = '<p>Không có sản phẩm trong giỏ hàng</p>';
-                return;
-            }
-            
-            checkoutItemsContainer.innerHTML = cart.map(item => `
-                <div class="order-summary-item">
-                    <span>${item.name} x ${item.quantity}</span>
-                    <span>${(item.price * item.quantity).toLocaleString()}đ</span>
-                </div>
-            `).join('');
-        }
-        
-        function updateCheckoutSummary() {
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const discount = subtotal > 500000 ? 108600 : 0;
-            const voucher = Math.min(subtotal * 0.12, 250000);
-            const shipping = subtotal > 50000 ? 0 : 30000;
-            const total = subtotal - discount - voucher + shipping;
-            
-            document.getElementById('orderSubtotal').textContent = subtotal.toLocaleString() + 'đ';
-            document.getElementById('orderDiscount').textContent = '-' + discount.toLocaleString() + 'đ';
-            document.getElementById('orderVoucher').textContent = '-' + voucher.toLocaleString() + 'đ';
-            document.getElementById('orderShipping').textContent = shipping === 0 ? '0 đ' : shipping.toLocaleString() + 'đ';
-            document.getElementById('orderTotal').textContent = total.toLocaleString() + 'đ';
-        }
-        
-        function applyCoupon() {
-            const couponCode = document.getElementById('couponCode').value;
-            if (couponCode === 'SALE12') {
-                showNotification('Đã áp dụng mã giảm giá 12% tối đa 250K');
-                updateCheckoutSummary();
-            } else {
-                showNotification('Mã giảm giá không hợp lệ');
-            }
-        }
-        
-        function completeOrder() {
-            const fullName = document.getElementById('checkoutFullName').value;
-            const phone = document.getElementById('checkoutPhone').value;
-            const address = document.getElementById('checkoutAddress').value;
-            
-            if (!fullName || !phone || !address) {
-                showNotification('Vui lòng nhập đầy đủ thông tin giao hàng');
-                return;
-            }
-            
-            // Hiển thị thông báo thành công
-            showNotification('Đặt hàng thành công! Cảm ơn bạn đã mua sắm tại PandaBeo');
-            
-            // Xóa giỏ hàng
-            cart = [];
-            localStorage.setItem('pandabeo_cart', JSON.stringify(cart));
-            updateCartCount();
-            
-            // Quay về trang chủ
-            setTimeout(() => {
-                showPage('home');
-            }, 2000);
-        }
-        
-        // ====== AUTH FUNCTIONS ======
-        function openAuthModal() {
-            document.getElementById('authModal').classList.add('active');
-        }
-        
-        function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
-        }
-        
-        function switchAuthTab(tab) {
-            // Cập nhật tabs
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            
-            if (tab === 'login') {
-                document.querySelector('.auth-tab[onclick*="login"]').classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                document.querySelector('.auth-tab[onclick*="register"]').classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-            }
-        }
-        
-        function initDateSelectors() {
-            // Ngày
-            const daySelect = document.getElementById('registerDay');
-            if (daySelect) {
-                for (let i = 1; i <= 31; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = i;
-                    daySelect.appendChild(option);
-                }
-            }
-            
-            // Tháng
-            const monthSelect = document.getElementById('registerMonth');
-            if (monthSelect) {
-                const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
-                               'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-                months.forEach((month, index) => {
-                    const option = document.createElement('option');
-                    option.value = index + 1;
-                    option.textContent = month;
-                    monthSelect.appendChild(option);
-                });
-            }
-            
-            // Năm
-            const yearSelect = document.getElementById('registerYear');
-            if (yearSelect) {
-                const currentYear = new Date().getFullYear();
-                for (let i = currentYear; i >= currentYear - 100; i--) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = i;
-                    yearSelect.appendChild(option);
-                }
-            }
-        }
-        
-        function login() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showNotification('Vui lòng nhập đầy đủ thông tin');
-                return;
-            }
-            
-            // Giả lập đăng nhập thành công
-            currentUser = {
-                name: "Nguyễn Văn A",
-                email: email,
-                phone: "0941552919"
-            };
-            
-            localStorage.setItem('pandabeo_user', JSON.stringify(currentUser));
-            updateUserInfo();
-            closeAuthModal();
-            showNotification('Đăng nhập thành công!');
-        }
-        
-        function register() {
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const day = document.getElementById('registerDay').value;
-            const month = document.getElementById('registerMonth').value;
-            const year = document.getElementById('registerYear').value;
-            const gender = document.querySelector('input[name="gender"]:checked');
-            
-            if (!name || !email || !password || !day || !month || !year || !gender) {
-                showNotification('Vui lòng nhập đầy đủ thông tin');
-                return;
-            }
-            
-            // Giả lập đăng ký thành công
-            currentUser = {
-                name: name,
-                email: email,
-                phone: "",
-                dob: `${day}/${month}/${year}`,
-                gender: gender.value
-            };
-            
-            localStorage.setItem('pandabeo_user', JSON.stringify(currentUser));
-            updateUserInfo();
-            
-            // Chuyển sang tab đăng nhập
-            switchAuthTab('login');
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = password;
-            
-            showNotification('Đăng ký thành công! Vui lòng đăng nhập');
-        }
-        
-        function updateUserInfo() {
-            if (currentUser) {
-                const userIcon = document.querySelector('.header-icon[onclick="openAuthModal()"]');
-                userIcon.innerHTML = `<i class="fas fa-user-check"></i>`;
-                userIcon.setAttribute('title', `Xin chào, ${currentUser.name}`);
-            }
-        }
-        
-        // ====== CART MODAL FUNCTIONS ======
-        function openCartModal() {
-            document.getElementById('cartModal').classList.add('active');
-            renderCartItems();
-            updateCartSummary();
-        }
-        
-        function closeCartModal() {
-            document.getElementById('cartModal').classList.remove('active');
-        }
-        
-        // ====== OTHER FUNCTIONS ======
-        function openSearch() {
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = 'Tìm kiếm sản phẩm...';
-            searchInput.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 60px;
-                padding: 0 20px;
-                font-size: 16px;
-                border: none;
-                border-bottom: 2px solid var(--primary);
-                z-index: 1001;
-                outline: none;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            `;
-            
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1000;
-            `;
-            
-            overlay.onclick = function() {
-                document.body.removeChild(searchInput);
-                document.body.removeChild(overlay);
-            };
-            
-            document.body.appendChild(searchInput);
-            document.body.appendChild(overlay);
-            searchInput.focus();
-        }
-        
-        function showNotification(message) {
-            // Tạo notification element
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: var(--primary);
-                color: white;
-                padding: 15px 20px;
-                border-radius: var(--radius);
-                box-shadow: var(--shadow-hover);
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                animation: slideIn 0.3s ease;
-            `;
-            
-            notification.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <span>${message}</span>
-            `;
-            document.body.appendChild(notification);
-            
-            // Tạo keyframe animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-                @keyframes slideOut {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // Xóa sau 3 giây
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease forwards';
-                
-                setTimeout(() => {
-                    notification.remove();
-                    style.remove();
-                }, 300);
-            }, 3000);
-        }
-        
-        // ====== PRODUCT DATA ======
-        function getAllProducts() {
-            return [
-                // Sản phẩm Nam
-                {
-                    id: 1,
-                    name: "Áo Thun Dirty Coins Oversize Basic",
-                    category: "nam",
-                    price: 550000,
-                    originalPrice: 650000,
-                    images: [
-                        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                        "https://images.unsplash.com/photo-1505022610485-0249ba5b3675?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L", "XL", "XXL"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Trắng", code: "#ffffff"}
-                    ],
-                    material: "cotton",
-                    brand: "Dirty Coins",
-                    tags: ["hot", "new"],
-                    description: "Áo thun oversize basic từ Dirty Coins với chất liệu cotton 100% mềm mại, thoáng mát. Thiết kế tối giản với logo Dirty Coins nhỏ ở ngực trái."
-                },
-                {
-                    id: 2,
-                    name: "Quần Short Dirty Coins Cargo",
-                    category: "nam",
-                    price: 680000,
-                    originalPrice: 850000,
-                    images: [
-                        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["M", "L", "XL"],
-                    colors: [
-                        {name: "Xám", code: "#a4b0be"},
-                        {name: "Đen", code: "#000000"}
-                    ],
-                    material: "cotton",
-                    brand: "Dirty Coins",
-                    tags: ["new"],
-                    description: "Quần short cargo với nhiều túi tiện dụng, chất liệu kaki cotton bền đẹp. Phù hợp cho các hoạt động ngoài trời và streetwear."
-                },
-                {
-                    id: 3,
-                    name: "Áo Polo SWE Basic Regular Fit",
-                    category: "nam",
-                    price: 350000,
-                    originalPrice: 450000,
-                    images: [
-                        "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "cotton",
-                    brand: "SWE",
-                    tags: ["sale"],
-                    description: "Áo polo basic từ SWE với chất liệu pique cotton cao cấp, cổ áo bền form. Thiết kế đơn giản, dễ phối đồ."
-                },
-                {
-                    id: 4,
-                    name: "Quần Jogger SWE Co Giãn",
-                    category: "nam",
-                    price: 420000,
-                    originalPrice: 520000,
-                    images: [
-                        "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L", "XL"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "cotton",
-                    brand: "SWE",
-                    tags: ["hot"],
-                    description: "Quần jogger co giãn thoải mái, phù hợp cho cả mặc nhà và đi chơi. Thiết kế hiện đại với túi chéo tiện dụng."
-                },
-                {
-                    id: 5,
-                    name: "Áo Hoodie SSSTUTTER In Hình",
-                    category: "nam",
-                    price: 750000,
-                    originalPrice: 950000,
-                    images: [
-                        "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["M", "L", "XL"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "cotton",
-                    brand: "SSSTUTTER",
-                    tags: ["new", "hot"],
-                    description: "Áo hoodie oversize với hình in độc đáo từ SSSTUTTER. Chất liệu nỉ cotton dày dặn, ấm áp cho mùa đông."
-                },
-                {
-                    id: 6,
-                    name: "Quần Jeans SSSTUTTER Rách Gối",
-                    category: "nam",
-                    price: 890000,
-                    originalPrice: 1100000,
-                    images: [
-                        "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["28", "30", "32", "34"],
-                    colors: [
-                        {name: "Xanh", code: "#3742fa"},
-                        {name: "Đen", code: "#000000"}
-                    ],
-                    material: "jeans",
-                    brand: "SSSTUTTER",
-                    tags: ["new"],
-                    description: "Quần jeans slim fit với hiệu ứng rách gối thời trang. Chất liệu denim co giãn, ôm vừa vặn."
-                },
-                {
-                    id: 7,
-                    name: "Áo Khoác Levents® Bomber",
-                    category: "nam",
-                    price: 1250000,
-                    originalPrice: 1500000,
-                    images: [
-                        "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["M", "L", "XL"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "kaki",
-                    brand: "Levents",
-                    tags: ["hot"],
-                    description: "Áo khoác bomber classic từ Levents® với chất liệu kaki chống thấm nước nhẹ. Thiết kế đẹp với logo thương hiệu tinh tế."
-                },
-                {
-                    id: 8,
-                    name: "Áo Thun Levents® Graphic Tee",
-                    category: "nam",
-                    price: 480000,
-                    originalPrice: 580000,
-                    images: [
-                        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L", "XL"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Đen", code: "#000000"}
-                    ],
-                    material: "cotton",
-                    brand: "Levents",
-                    tags: ["new"],
-                    description: "Áo thun graphic với hình in độc quyền từ Levents®. Chất liệu cotton 100% mềm mại, thoáng mát."
-                },
-                // Sản phẩm Nữ
-                {
-                    id: 9,
-                    name: "Áo Sơ Mi JBAGY Linen",
-                    category: "nu",
-                    price: 650000,
-                    originalPrice: 800000,
-                    images: [
-                        "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "lua",
-                    brand: "JBAGY",
-                    tags: ["new"],
-                    description: "Áo sơ mi linen từ JBAGY với chất liệu lanh tự nhiên, thoáng mát cho mùa hè. Thiết kế tối giản, thanh lịch."
-                },
-                {
-                    id: 10,
-                    name: "Đầm Dự Tiệc SWE",
-                    category: "nu",
-                    price: 850000,
-                    originalPrice: 1050000,
-                    images: [
-                        "https://images.unsplash.com/photo-1598558558601-9c2156df4e13?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L"],
-                    colors: [
-                        {name: "Đỏ", code: "#ff4757"},
-                        {name: "Đen", code: "#000000"}
-                    ],
-                    material: "lua",
-                    brand: "SWE",
-                    tags: ["sale"],
-                    description: "Đầm dự tiệc sang trọng với thiết kế ôm body, chất liệu lụa cao cấp. Phù hợp cho các sự kiện quan trọng."
-                },
-                {
-                    id: 11,
-                    name: "Chân Váy SSSTUTTER",
-                    category: "nu",
-                    price: 450000,
-                    originalPrice: 580000,
-                    images: [
-                        "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "cotton",
-                    brand: "SSSTUTTER",
-                    tags: ["new"],
-                    description: "Chân váy midi với thiết kế đơn giản, dễ phối đồ. Chất liệu cotton co giãn, thoải mái khi mặc."
-                },
-                {
-                    id: 12,
-                    name: "Áo Kiểu JBAGY",
-                    category: "nu",
-                    price: 520000,
-                    originalPrice: 650000,
-                    images: [
-                        "https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["S", "M", "L"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Xanh lá", code: "#2ed573"}
-                    ],
-                    material: "cotton",
-                    brand: "JBAGY",
-                    tags: ["hot"],
-                    description: "Áo kiểu tay dài với thiết kế cổ điển, chất liệu cotton mềm mại. Phù hợp cho cả đi làm và đi chơi."
-                },
-                // Sản phẩm Trẻ Em
-                {
-                    id: 13,
-                    name: "Bộ Đồ Thun Canifa Cho Bé Trai",
-                    category: "tre-em",
-                    price: 250000,
-                    originalPrice: 320000,
-                    images: [
-                        "https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["104", "110", "116", "122", "128"],
-                    colors: [
-                        {name: "Xanh", code: "#3742fa"},
-                        {name: "Đỏ", code: "#ff4757"},
-                        {name: "Xanh lá", code: "#2ed573"}
-                    ],
-                    material: "cotton",
-                    brand: "Canifa",
-                    tags: ["sale"],
-                    description: "Bộ đồ thun cho bé trai từ Canifa với chất liệu cotton 100% an toàn cho da bé. Thiết kế với hình ảnh ngộ nghĩnh."
-                },
-                {
-                    id: 14,
-                    name: "Váy Liền Canifa Cho Bé Gái",
-                    category: "tre-em",
-                    price: 280000,
-                    originalPrice: 350000,
-                    images: [
-                        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["104", "110", "116", "122", "128"],
-                    colors: [
-                        {name: "Đỏ", code: "#ff4757"},
-                        {name: "Cam", code: "#ffa502"},
-                        {name: "Xanh lá", code: "#2ed573"}
-                    ],
-                    material: "cotton",
-                    brand: "Canifa",
-                    tags: ["new"],
-                    description: "Váy liền xinh xắn cho bé gái từ Canifa. Chất liệu cotton mềm mại, thiết kế với họa tiết hoa và nơ dễ thương."
-                },
-                {
-                    id: 15,
-                    name: "Áo Phông Bé Trai Cotton USA",
-                    category: "tre-em",
-                    price: 139300,
-                    originalPrice: 199000,
-                    images: [
-                        "https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["98", "104", "110", "116", "122", "128", "134", "140"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Xanh", code: "#3742fa"}
-                    ],
-                    material: "cotton",
-                    brand: "Canifa",
-                    tags: ["sale", "hot"],
-                    description: "Áo phông bé trai cotton USA có hình in. Chất liệu 100% cotton mềm mại, an toàn cho da bé. Giảm giá 30%."
-                },
-                // Sản phẩm Phụ Kiện
-                {
-                    id: 16,
-                    name: "Túi Tote Dirty Coins Canvas",
-                    category: "phu-kien",
-                    price: 450000,
-                    originalPrice: 550000,
-                    images: [
-                        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["One Size"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "canvas",
-                    brand: "Dirty Coins",
-                    tags: ["new"],
-                    description: "Túi tote canvas từ Dirty Coins với sức chứa lớn, thiết kế đơn giản với logo thương hiệu. Phù hợp cho đi học, đi làm."
-                },
-                {
-                    id: 17,
-                    name: "Mũ Lưỡi Trai Levents®",
-                    category: "phu-kien",
-                    price: 320000,
-                    originalPrice: 400000,
-                    images: [
-                        "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["One Size"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "cotton",
-                    brand: "Levents",
-                    tags: ["hot"],
-                    description: "Mũ lưỡi trai từ Levents® với chất liệu cotton dày dặn, logo thương hiệu thêu tinh tế. Điều chỉnh size phía sau."
-                },
-                {
-                    id: 18,
-                    name: "Ví Da JBAGY Minimalist",
-                    category: "phu-kien",
-                    price: 380000,
-                    originalPrice: 480000,
-                    images: [
-                        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["One Size"],
-                    colors: [
-                        {name: "Đen", code: "#000000"},
-                        {name: "Xám", code: "#a4b0be"}
-                    ],
-                    material: "da",
-                    brand: "JBAGY",
-                    tags: ["new"],
-                    description: "Ví da minimalist từ JBAGY với thiết kế tối giản, nhiều ngăn đựng tiện lợi. Chất liệu da PU cao cấp."
-                },
-                {
-                    id: 19,
-                    name: "Giày Sneaker SSSTUTTER Low Top",
-                    category: "phu-kien",
-                    price: 950000,
-                    originalPrice: 1200000,
-                    images: [
-                        "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                    ],
-                    sizes: ["38", "39", "40", "41", "42", "43"],
-                    colors: [
-                        {name: "Trắng", code: "#ffffff"},
-                        {name: "Đen", code: "#000000"}
-                    ],
-                    material: "canvas",
-                    brand: "SSSTUTTER",
-                    tags: ["hot"],
-                    description: "Giày sneaker low top từ SSSTUTTER với đế êm ái, thiết kế trẻ trung. Phù hợp cho nhiều hoạt động hàng ngày."
-                }
-            ];
-        }
-    </script>
-</body>
-</html>
+        }, 300);
+    }, 3000);
+}
