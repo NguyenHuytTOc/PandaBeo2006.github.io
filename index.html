@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PandaBeo - Multi-Brand Fashion Store</title>
+    <title>PandaBeo - Thời Trang Cao Cấp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -879,47 +879,6 @@
             font-size: 13px;
         }
         
-        /* Brands Showcase */
-        .brands-showcase {
-            padding: 40px 0;
-            background: var(--light);
-        }
-        
-        .brands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .brand-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .brand-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .brand-logo {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-        
-        .brand-logo img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-        }
-        
         /* Footer */
         .footer {
             background: var(--dark);
@@ -1165,10 +1124,6 @@
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             }
-            
-            .brands-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
         }
         
         @media (max-width: 768px) {
@@ -1225,10 +1180,6 @@
                 flex-direction: column;
                 text-align: center;
             }
-            
-            .brands-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
         
         /* Utility Classes */
@@ -1262,7 +1213,7 @@
                     <span class="logo-icon">🐼</span>
                     <div>
                         <div>PandaBeo</div>
-                        <div class="logo-sub">Multi-Brand Fashion Store</div>
+                        <div class="logo-sub">Thời trang cao cấp</div>
                     </div>
                 </a>
                 
@@ -1270,11 +1221,11 @@
                     <ul class="nav-menu">
                         <li><a href="#home" class="active">Trang Chủ</a></li>
                         <li><a href="#shop">Cửa Hàng</a></li>
-                        <li><a href="#nam">Thời Trang Nam</a></li>
-                        <li><a href="#nu">Thời Trang Nữ</a></li>
-                        <li><a href="#tre-em">Trẻ Em & Canifa</a></li>
-                        <li><a href="#phu-kien">Phụ Kiện</a></li>
-                        <li><a href="#brands">Thương Hiệu</a></li>
+                        <li><a href="#nam">Nam</a></li>
+                        <li><a href="#nu">Nữ</a></li>
+                        <li><a href="#tre-em">Trẻ Em</a></li>
+                        <li><a href="#lookbook">Lookbook</a></li>
+                        <li><a href="#blog">Blog</a></li>
                         <li><a href="#about">Về Chúng Tôi</a></li>
                     </ul>
                 </nav>
@@ -1300,63 +1251,9 @@
         <div class="container">
             <div class="hero-content">
                 <h1>BỘ SƯU TẬP MÙA HÈ 2025</h1>
-                <p>Khám phá những xu hướng thời trang mới nhất từ các thương hiệu hàng đầu: Dirty Coins, SWE, SSSTUTTER, Levents, JBAGY và Canifa</p>
+                <p>Khám phá những xu hướng thời trang mới nhất với chất lượng vượt trội và thiết kế độc đáo. Thể hiện phong cách của riêng bạn!</p>
                 <div class="sale-badge">SALE UP TO 70%</div>
                 <a href="#shop" class="btn btn-primary">MUA SẮM NGAY</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== BRANDS SHOWCASE ====== -->
-    <section class="brands-showcase" id="brands">
-        <div class="container">
-            <div class="section-title">
-                <h2>Các Thương Hiệu Nổi Bật</h2>
-                <p>Khám phá các thương hiệu thời trang hàng đầu có tại PandaBeo</p>
-            </div>
-            <div class="brands-grid">
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #333;">DIRTY COINS</span>
-                    </div>
-                    <h4>Streetwear Premium</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 500K - 2.5M</p>
-                </div>
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #333;">SWE</span>
-                    </div>
-                    <h4>Basic & Essentials</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 300K - 1.2M</p>
-                </div>
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #333;">SSSTUTTER</span>
-                    </div>
-                    <h4>Urban Fashion</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 400K - 1.8M</p>
-                </div>
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #333;">LEVENTS®</span>
-                    </div>
-                    <h4>Vietnamese Streetwear</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 450K - 2M</p>
-                </div>
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #333;">JBAGY</span>
-                    </div>
-                    <h4>Minimalist Style</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 350K - 1.5M</p>
-                </div>
-                <div class="brand-card">
-                    <div class="brand-logo">
-                        <span style="font-size: 24px; font-weight: bold; color: #ff6b6b;">CANIFA</span>
-                    </div>
-                    <h4>Thời Trang Trẻ Em</h4>
-                    <p style="font-size: 12px; color: var(--gray);">Từ 150K - 800K</p>
-                </div>
             </div>
         </div>
     </section>
@@ -1364,30 +1261,26 @@
     <!-- ====== CATEGORIES ====== -->
     <section class="categories">
         <div class="container">
-            <div class="section-title">
-                <h2>Danh Mục Sản Phẩm</h2>
-                <p>Lựa chọn theo nhu cầu của bạn</p>
-            </div>
             <div class="categories-grid">
-                <div class="category-card" onclick="filterByCategory('nam')">
+                <div class="category-card">
                     <div class="category-icon">👕</div>
                     <h3>Thời Trang Nam</h3>
-                    <p>Áo thun, áo sơ mi, quần âu, áo khoác</p>
+                    <p>Áo sơ mi, quần âu, áo khoác</p>
                 </div>
-                <div class="category-card" onclick="filterByCategory('nu')">
+                <div class="category-card">
                     <div class="category-icon">👚</div>
                     <h3>Thời Trang Nữ</h3>
-                    <p>Đầm, váy, áo kiểu, chân váy, set đồ</p>
+                    <p>Đầm, váy, áo kiểu, chân váy</p>
                 </div>
-                <div class="category-card" onclick="filterByCategory('tre-em')">
+                <div class="category-card">
                     <div class="category-icon">👶</div>
-                    <h3>Trẻ Em & Canifa</h3>
-                    <p>Đồ bé trai, bé gái, sơ sinh, trẻ em</p>
+                    <h3>Thời Trang Trẻ Em</h3>
+                    <p>Đồ bé trai, bé gái, sơ sinh</p>
                 </div>
-                <div class="category-card" onclick="filterByCategory('phu-kien')">
+                <div class="category-card">
                     <div class="category-icon">👜</div>
                     <h3>Phụ Kiện</h3>
-                    <p>Túi xách, giày dép, mũ nón, ví</p>
+                    <p>Túi xách, giày dép, mũ nón</p>
                 </div>
             </div>
         </div>
@@ -1485,12 +1378,11 @@
                         <span>Thương Hiệu</span>
                     </div>
                     <div class="filter-options">
-                        <span class="filter-option multiple" data-filter="brand" data-value="dirtycoins" onclick="selectFilter('brand', 'dirtycoins')">Dirty Coins</span>
-                        <span class="filter-option multiple" data-filter="brand" data-value="swe" onclick="selectFilter('brand', 'swe')">SWE</span>
-                        <span class="filter-option multiple" data-filter="brand" data-value="ssstutter" onclick="selectFilter('brand', 'ssstutter')">SSSTUTTER</span>
-                        <span class="filter-option multiple" data-filter="brand" data-value="levents" onclick="selectFilter('brand', 'levents')">Levents</span>
-                        <span class="filter-option multiple" data-filter="brand" data-value="jbagy" onclick="selectFilter('brand', 'jbagy')">JBAGY</span>
-                        <span class="filter-option multiple" data-filter="brand" data-value="canifa" onclick="selectFilter('brand', 'canifa')">Canifa</span>
+                        <span class="filter-option multiple" data-filter="brand" data-value="pandabeo" onclick="selectFilter('brand', 'pandabeo')">PandaBeo</span>
+                        <span class="filter-option multiple" data-filter="brand" data-value="gucci" onclick="selectFilter('brand', 'gucci')">Gucci</span>
+                        <span class="filter-option multiple" data-filter="brand" data-value="adidas" onclick="selectFilter('brand', 'adidas')">Adidas</span>
+                        <span class="filter-option multiple" data-filter="brand" data-value="hm" onclick="selectFilter('brand', 'hm')">H&M</span>
+                        <span class="filter-option multiple" data-filter="brand" data-value="zara" onclick="selectFilter('brand', 'zara')">Zara</span>
                     </div>
                 </div>
                 
@@ -1524,32 +1416,48 @@
     <section class="content-section" id="nam">
         <div class="container">
             <h2>Thời Trang Nam</h2>
-            <p>Khám phá bộ sưu tập thời trang nam mới nhất từ các thương hiệu streetwear hàng đầu: Dirty Coins, Levents, SSSTUTTER, SWE và JBAGY. Từ áo thun basic đến áo khoác bomber, từ quần jeans đến quần jogger - chúng tôi mang đến cho bạn sự lựa chọn đa dạng và phong phú.</p>
-            <p>Chất liệu cao cấp, thiết kế độc đáo và những xu hướng thời trang mới nhất sẽ giúp bạn tự tin tỏa sáng trong mọi hoàn cảnh. Đặc biệt, các sản phẩm từ Levents® - thương hiệu streetwear Việt Nam nổi tiếng với chất lượng vượt trội và thiết kế sáng tạo.</p>
+            <p>Khám phá bộ sưu tập thời trang nam mới nhất với những thiết kế trẻ trung, năng động và lịch lãm. Từ những bộ vest công sở đến áo thun casual, chúng tôi mang đến cho bạn sự lựa chọn đa dạng và phong phú.</p>
+            <p>Chất liệu cao cấp, đường may tinh tế cùng với những xu hướng thời trang mới nhất sẽ giúp bạn tự tin tỏa sáng trong mọi hoàn cảnh.</p>
         </div>
     </section>
 
     <section class="content-section" id="nu" style="background: var(--light);">
         <div class="container">
             <h2>Thời Trang Nữ</h2>
-            <p>Bộ sưu tập thời trang nữ với những thiết kế thanh lịch, quyến rũ và hiện đại từ các thương hiệu được yêu thích. Từ váy dự tiệc sang trọng đến những set đồ hàng ngày thoải mái, chúng tôi hiểu được nhu cầu đa dạng của phái đẹp.</p>
-            <p>Với sự kết hợp hài hòa giữa màu sắc, chất liệu và kiểu dáng, mỗi sản phẩm đều được chăm chút tỉ mỉ để mang đến vẻ đẹp hoàn hảo cho người mặc. Đặc biệt, các sản phẩm từ SWE và JBAGY với phong cách tối giản, dễ phối đồ.</p>
+            <p>Bộ sưu tập thời trang nữ với những thiết kế thanh lịch, quyến rũ và hiện đại. Từ váy dự tiệc sang trọng đến những set đồ hàng ngày thoải mái, chúng tôi hiểu được nhu cầu đa dạng của phái đẹp.</p>
+            <p>Với sự kết hợp hài hòa giữa màu sắc, chất liệu và kiểu dáng, mỗi sản phẩm đều được chăm chút tỉ mỉ để mang đến vẻ đẹp hoàn hảo cho người mặc.</p>
         </div>
     </section>
 
     <section class="content-section" id="tre-em">
         <div class="container">
-            <h2>Trẻ Em & Canifa</h2>
-            <p>Những bộ đồ trẻ em đáng yêu, an toàn và thoải mái từ thương hiệu Canifa - thương hiệu thời trang trẻ em uy tín hàng đầu Việt Nam. Chúng tôi lựa chọn những chất liệu mềm mại, thân thiện với làn da nhạy cảm của trẻ nhỏ.</p>
-            <p>Thiết kế đa dạng từ đồ sơ sinh đến trang phục cho bé trai, bé gái với màu sắc tươi sáng, họa tiết ngộ nghĩnh giúp các bé thoải mái vận động và phát triển. Canifa cam kết chất lượng với tiêu chuẩn an toàn cao nhất cho trẻ em.</p>
+            <h2>Thời Trang Trẻ Em</h2>
+            <p>Những bộ đồ trẻ em đáng yêu, an toàn và thoải mái cho các bé. Chúng tôi lựa chọn những chất liệu mềm mại, thân thiện với làn da nhạy cảm của trẻ nhỏ.</p>
+            <p>Thiết kế đa dạng từ đồ sơ sinh đến trang phục cho bé trai, bé gái với màu sắc tươi sáng, họa tiết ngộ nghĩnh giúp các bé thoải mái vận động và phát triển.</p>
         </div>
     </section>
 
-    <section class="content-section" id="phu-kien" style="background: var(--light);">
+    <section class="content-section" id="lookbook" style="background: var(--light);">
         <div class="container">
-            <h2>Phụ Kiện Thời Trang</h2>
-            <p>Hoàn thiện phong cách của bạn với các phụ kiện thời trang từ các thương hiệu uy tín. Từ túi xách, giày dép đến mũ nón và ví - mỗi phụ kiện đều được lựa chọn kỹ lưỡng để phù hợp với xu hướng hiện đại.</p>
-            <p>Khám phá bộ sưu tập phụ kiện đa dạng giúp bạn thể hiện cá tính riêng biệt. Dù là phong cách streetwear cá tính hay phong cách tối giản thanh lịch, chúng tôi đều có những lựa chọn phù hợp cho bạn.</p>
+            <h2>Lookbook</h2>
+            <p>Khám phá những phong cách mix & match độc đáo từ các fashionista. Lookbook của chúng tôi sẽ mang đến cho bạn cảm hứng về thời trang và cách phối đồ sáng tạo.</p>
+            <p>Từ phong cách công sở chuyên nghiệp đến street style cá tính, từ dạo phố đến dự tiệc - tất cả đều được thể hiện một cách tinh tế và thời thượng.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="blog">
+        <div class="container">
+            <h2>Blog Thời Trang</h2>
+            <p>Cập nhật những xu hướng thời trang mới nhất, tips phối đồ và những câu chuyện thú vị về thế giới thời trang. Blog của PandaBeo là nơi chia sẻ kiến thức và cảm hứng thời trang.</p>
+            <p>Đọc những bài viết từ các chuyên gia thời trang, học cách chăm sóc quần áo đúng cách và khám phá những bí quyết để luôn tự tin với phong cách của riêng mình.</p>
+        </div>
+    </section>
+
+    <section class="content-section" id="about" style="background: var(--light);">
+        <div class="container">
+            <h2>Về Chúng Tôi</h2>
+            <p>PandaBeo được thành lập với sứ mệnh mang đến cho khách hàng những sản phẩm thời trang chất lượng cao với giá cả hợp lý. Chúng tôi tin rằng thời trang không chỉ là quần áo, mà còn là cách thể hiện cá tính và phong cách sống.</p>
+            <p>Với đội ngũ thiết kế tài năng và nhân viên tận tâm, chúng tôi không ngừng sáng tạo để mang đến những sản phẩm tốt nhất cho khách hàng. PandaBeo cam kết mang đến trải nghiệm mua sắm tuyệt vời nhất.</p>
         </div>
     </section>
 
@@ -1832,12 +1740,11 @@
             '500-1000': '500K-1M',
             '1000-2000': '1M-2M',
             '2000+': 'Trên 2M',
-            'dirtycoins': 'Dirty Coins',
-            'swe': 'SWE',
-            'ssstutter': 'SSSTUTTER',
-            'levents': 'Levents',
-            'jbagy': 'JBAGY',
-            'canifa': 'Canifa'
+            'pandabeo': 'PandaBeo',
+            'gucci': 'Gucci',
+            'adidas': 'Adidas',
+            'hm': 'H&M',
+            'zara': 'Zara'
         };
         
         // ====== INITIALIZATION ======
@@ -2031,278 +1938,120 @@
             }, 500);
         }
         
-        function filterByCategory(category) {
-            // Reset tất cả filter
-            clearAllFilters();
-            
-            // Tự động chọn filter theo category
-            if (category === 'nam') {
-                document.querySelector('[data-value="all"]').classList.remove('active');
-                document.querySelector('[data-value="all"]').classList.add('active');
-                // Thêm sản phẩm nam vào filter
-            } else if (category === 'nu') {
-                // Logic tương tự
-            }
-            
-            // Scroll tới phần sản phẩm
-            document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
-        }
-        
         // ====== PRODUCT FUNCTIONS ======
         function getFilteredProducts() {
             const allProducts = [
-                // Dirty Coins Products
                 {
                     id: 1,
-                    name: "Áo Thun Dirty Coins Oversize Basic",
-                    category: "Áo Thun",
-                    price: 550000,
-                    originalPrice: 650000,
-                    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["M", "L", "XL", "XXL"],
-                    color: ["#000000", "#ffffff"],
+                    name: "Áo Sơ Mi Nam Dài Tay Cao Cấp",
+                    category: "Áo Sơ Mi",
+                    price: 599000,
+                    originalPrice: 799000,
+                    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["M", "L", "XL"],
+                    color: ["#ffffff", "#a4b0be"],
                     material: ["cotton"],
-                    style: ["oversize"],
-                    brand: ["dirtycoins"],
-                    tags: ["hot", "new"],
-                    description: "Áo thun oversize basic từ Dirty Coins với chất liệu cotton 100% mềm mại, thoáng mát. Thiết kế tối giản với logo Dirty Coins nhỏ ở ngực trái."
+                    style: ["regular"],
+                    brand: ["pandabeo"],
+                    tags: ["new", "sale"]
                 },
                 {
                     id: 2,
-                    name: "Quần Short Dirty Coins Cargo",
-                    category: "Quần Short",
-                    price: 680000,
-                    originalPrice: 850000,
-                    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["M", "L", "XL"],
-                    color: ["#a4b0be", "#000000"],
-                    material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["dirtycoins"],
-                    tags: ["new"],
-                    description: "Quần short cargo với nhiều túi tiện dụng, chất liệu kaki cotton bền đẹp. Phù hợp cho các hoạt động ngoài trời và streetwear."
+                    name: "Đầm Dự Tiệc Sang Trọng",
+                    category: "Đầm Váy",
+                    price: 1299000,
+                    originalPrice: 1599000,
+                    image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M", "L"],
+                    color: ["#000000", "#ff4757"],
+                    material: ["lua"],
+                    style: ["body"],
+                    brand: ["pandabeo"],
+                    tags: ["hot"]
                 },
-                
-                // SWE Products
                 {
                     id: 3,
-                    name: "Áo Polo SWE Basic Regular Fit",
-                    category: "Áo Polo",
-                    price: 350000,
-                    originalPrice: 450000,
-                    image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["S", "M", "L"],
-                    color: ["#ffffff", "#000000", "#a4b0be"],
+                    name: "Áo Hoodie Unisex Thể Thao",
+                    category: "Áo Hoodie",
+                    price: 499000,
+                    originalPrice: 799000,
+                    image: "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M", "L", "XL"],
+                    color: ["#a4b0be", "#000000"],
                     material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["swe"],
-                    tags: ["sale"],
-                    description: "Áo polo basic từ SWE với chất liệu pique cotton cao cấp, cổ áo bền form. Thiết kế đơn giản, dễ phối đồ."
+                    style: ["oversize"],
+                    brand: ["adidas"],
+                    tags: ["sale"]
                 },
                 {
                     id: 4,
-                    name: "Quần Jogger SWE Co Giãn",
-                    category: "Quần Jogger",
-                    price: 420000,
-                    originalPrice: 520000,
-                    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["S", "M", "L", "XL"],
-                    color: ["#000000", "#a4b0be"],
-                    material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["swe"],
-                    tags: ["hot"],
-                    description: "Quần jogger co giãn thoải mái, phù hợp cho cả mặc nhà và đi chơi. Thiết kế hiện đại với túi chéo tiện dụng."
-                },
-                
-                // SSSTUTTER Products
-                {
-                    id: 5,
-                    name: "Áo Hoodie SSSTUTTER In Hình",
-                    category: "Áo Hoodie",
-                    price: 750000,
-                    originalPrice: 950000,
-                    image: "https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["M", "L", "XL"],
-                    color: ["#000000", "#a4b0be"],
-                    material: ["cotton"],
-                    style: ["oversize"],
-                    brand: ["ssstutter"],
-                    tags: ["new", "hot"],
-                    description: "Áo hoodie oversize với hình in độc đáo từ SSSTUTTER. Chất liệu nỉ cotton dày dặn, ấm áp cho mùa đông."
-                },
-                {
-                    id: 6,
-                    name: "Quần Jeans SSSTUTTER Rách Gối",
+                    name: "Quần Jeans Nam Slim Fit",
                     category: "Quần Jeans",
-                    price: 890000,
-                    originalPrice: 1100000,
-                    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["28", "29", "30", "31", "32"],
+                    price: 799000,
+                    originalPrice: 1099000,
+                    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["M", "L", "XL"],
                     color: ["#3742fa", "#000000"],
                     material: ["jeans"],
                     style: ["slim"],
-                    brand: ["ssstutter"],
-                    tags: ["new"],
-                    description: "Quần jeans slim fit với hiệu ứng rách gối thời trang. Chất liệu denim co giãn, ôm vừa vặn."
+                    brand: ["zara"],
+                    tags: ["new", "sale"]
                 },
-                
-                // Levents Products
+                {
+                    id: 5,
+                    name: "Áo Polo Nam Cao Cấp",
+                    category: "Áo Polo",
+                    price: 450000,
+                    originalPrice: 650000,
+                    image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M", "L"],
+                    color: ["#ffffff", "#2ed573"],
+                    material: ["cotton"],
+                    style: ["regular"],
+                    brand: ["pandabeo"],
+                    tags: ["new"]
+                },
+                {
+                    id: 6,
+                    name: "Chân Váy Dài Nữ",
+                    category: "Chân Váy",
+                    price: 890000,
+                    originalPrice: 1200000,
+                    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M"],
+                    color: ["#ff4757", "#000000"],
+                    material: ["kaki"],
+                    style: ["body"],
+                    brand: ["hm"],
+                    tags: ["hot"]
+                },
                 {
                     id: 7,
-                    name: "Áo Khoác Levents® Bomber",
+                    name: "Áo Khoác Dù Nam Chống Nước",
                     category: "Áo Khoác",
-                    price: 1250000,
-                    originalPrice: 1500000,
+                    price: 699000,
+                    originalPrice: 999000,
                     image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
                     size: ["M", "L", "XL"],
                     color: ["#000000", "#a4b0be"],
                     material: ["kaki"],
                     style: ["regular"],
-                    brand: ["levents"],
-                    tags: ["hot"],
-                    description: "Áo khoác bomber classic từ Levents® với chất liệu kaki chống thấm nước nhẹ. Thiết kế đẹp với logo thương hiệu tinh tế."
+                    brand: ["pandabeo"],
+                    tags: ["new"]
                 },
                 {
                     id: 8,
-                    name: "Áo Thun Levents® Graphic Tee",
-                    category: "Áo Thun",
-                    price: 480000,
-                    originalPrice: 580000,
-                    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["S", "M", "L", "XL"],
-                    color: ["#ffffff", "#000000"],
+                    name: "Set Đồ Ngủ Nữ Cao Cấp",
+                    category: "Đồ Ngủ",
+                    price: 399000,
+                    originalPrice: 599000,
+                    image: "https://images.unsplash.com/photo-1585487000160-6eb9ce6b5aae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    size: ["S", "M"],
+                    color: ["#ff4757", "#ffffff"],
                     material: ["cotton"],
                     style: ["regular"],
-                    brand: ["levents"],
-                    tags: ["new"],
-                    description: "Áo thun graphic với hình in độc quyền từ Levents®. Chất liệu cotton 100% mềm mại, thoáng mát."
-                },
-                
-                // JBAGY Products
-                {
-                    id: 9,
-                    name: "Áo Sơ Mi JBAGY Linen",
-                    category: "Áo Sơ Mi",
-                    price: 650000,
-                    originalPrice: 800000,
-                    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["S", "M", "L"],
-                    color: ["#ffffff", "#a4b0be"],
-                    material: ["lua"],
-                    style: ["regular"],
-                    brand: ["jbagy"],
-                    tags: ["new"],
-                    description: "Áo sơ mi linen từ JBAGY với chất liệu lanh tự nhiên, thoáng mát cho mùa hè. Thiết kế tối giản, thanh lịch."
-                },
-                {
-                    id: 10,
-                    name: "Quần Tây JBAGY Slim Fit",
-                    category: "Quần Tây",
-                    price: 850000,
-                    originalPrice: 1050000,
-                    image: "https://images.unsplash.com/photo-1598558558601-9c2156df4e13?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["28", "29", "30", "31", "32"],
-                    color: ["#000000", "#a4b0be"],
-                    material: ["kaki"],
-                    style: ["slim"],
-                    brand: ["jbagy"],
-                    tags: ["sale"],
-                    description: "Quần tây slim fit từ JBAGY với chất liệu kaki cao cấp, không nhăn. Phù hợp cho văn phòng và các dịp quan trọng."
-                },
-                
-                // Canifa Products (Trẻ Em)
-                {
-                    id: 11,
-                    name: "Bộ Đồ Thun Canifa Cho Bé Trai",
-                    category: "Đồ Trẻ Em",
-                    price: 250000,
-                    originalPrice: 320000,
-                    image: "https://images.unsplash.com/photo-1558769132-cb1f96c8b8e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["3-4T", "5-6T", "7-8T"],
-                    color: ["#3742fa", "#ff4757", "#2ed573"],
-                    material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["canifa"],
-                    tags: ["sale"],
-                    description: "Bộ đồ thun cho bé trai từ Canifa với chất liệu cotton 100% an toàn cho da bé. Thiết kế với hình ảnh ngộ nghĩnh."
-                },
-                {
-                    id: 12,
-                    name: "Váy Liền Canifa Cho Bé Gái",
-                    category: "Đồ Trẻ Em",
-                    price: 280000,
-                    originalPrice: 350000,
-                    image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["3-4T", "5-6T", "7-8T"],
-                    color: ["#ff4757", "#ffa502", "#2ed573"],
-                    material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["canifa"],
-                    tags: ["new"],
-                    description: "Váy liền xinh xắn cho bé gái từ Canifa. Chất liệu cotton mềm mại, thiết kế với họa tiết hoa và nơ dễ thương."
-                },
-                
-                // Phụ Kiện
-                {
-                    id: 13,
-                    name: "Túi Tote Dirty Coins Canvas",
-                    category: "Phụ Kiện",
-                    price: 450000,
-                    originalPrice: 550000,
-                    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["One Size"],
-                    color: ["#000000", "#a4b0be"],
-                    material: ["canvas"],
-                    style: ["regular"],
-                    brand: ["dirtycoins"],
-                    tags: ["new"],
-                    description: "Túi tote canvas từ Dirty Coins với sức chứa lớn, thiết kế đơn giản với logo thương hiệu. Phù hợp cho đi học, đi làm."
-                },
-                {
-                    id: 14,
-                    name: "Mũ Lưỡi Trai Levents®",
-                    category: "Phụ Kiện",
-                    price: 320000,
-                    originalPrice: 400000,
-                    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["One Size"],
-                    color: ["#000000", "#ffffff", "#a4b0be"],
-                    material: ["cotton"],
-                    style: ["regular"],
-                    brand: ["levents"],
-                    tags: ["hot"],
-                    description: "Mũ lưỡi trai từ Levents® với chất liệu cotton dày dặn, logo thương hiệu thêu tinh tế. Điều chỉnh size phía sau."
-                },
-                {
-                    id: 15,
-                    name: "Ví Da JBAGY Minimalist",
-                    category: "Phụ Kiện",
-                    price: 380000,
-                    originalPrice: 480000,
-                    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["One Size"],
-                    color: ["#000000", "#a4b0be"],
-                    material: ["da"],
-                    style: ["regular"],
-                    brand: ["jbagy"],
-                    tags: ["new"],
-                    description: "Ví da minimalist từ JBAGY với thiết kế tối giản, nhiều ngăn đựng tiện lợi. Chất liệu da PU cao cấp."
-                },
-                {
-                    id: 16,
-                    name: "Giày Sneaker SSSTUTTER Low Top",
-                    category: "Phụ Kiện",
-                    price: 950000,
-                    originalPrice: 1200000,
-                    image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-                    size: ["38", "39", "40", "41", "42", "43"],
-                    color: ["#ffffff", "#000000"],
-                    material: ["canvas"],
-                    style: ["regular"],
-                    brand: ["ssstutter"],
-                    tags: ["hot"],
-                    description: "Giày sneaker low top từ SSSTUTTER với đế êm ái, thiết kế trẻ trung. Phù hợp cho nhiều hoạt động hàng ngày."
+                    brand: ["pandabeo"],
+                    tags: ["sale"]
                 }
             ];
             
@@ -2402,7 +2151,7 @@
                             <button class="quick-view" onclick="openQuickView(${product.id}); event.stopPropagation();">Xem Nhanh</button>
                         </div>
                         <div class="product-info">
-                            <div class="product-category">${product.category} • ${valueDisplayNames[product.brand[0]]}</div>
+                            <div class="product-category">${product.category}</div>
                             <h3 class="product-name">${product.name}</h3>
                             <div class="product-price">
                                 <span class="current-price">${product.price.toLocaleString()}đ</span>
@@ -2750,10 +2499,7 @@
         
         function openQuickView(productId) {
             event.stopPropagation();
-            const product = getFilteredProducts().find(p => p.id === productId);
-            if (product) {
-                alert(`Xem nhanh: ${product.name}\n\nGiá: ${product.price.toLocaleString()}đ\n\nMô tả: ${product.description || 'Không có mô tả'}`);
-            }
+            showNotification('Đang mở xem nhanh sản phẩm...');
         }
         
         function showNotification(message) {
